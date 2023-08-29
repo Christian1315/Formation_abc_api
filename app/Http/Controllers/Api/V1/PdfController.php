@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -10,7 +11,7 @@ use PDF;
 
 class PdfController extends Controller
 {
-    public function getPostPdf(Request $request)
+    public function getPdf(Request $request)
     {
         // L'instance PDF avec la vue resources/views/posts/show.blade.php
         $data =[

@@ -6,7 +6,6 @@ use App\Http\Controllers\Api\V1\Authorization;
 use App\Http\Controllers\Api\V1\FretController;
 use App\Http\Controllers\Api\V1\TransportType;
 use App\Http\Controllers\Api\V1\Notifications;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*

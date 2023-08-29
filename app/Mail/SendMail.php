@@ -32,10 +32,6 @@ class SendEmail extends Mailable
     {
         return new Envelope(
             subject: $this->details["subject"],
-            from: new Address('no-reply@agbande.com', 'AGBANDE'),
-            replyTo: [
-                new Address('no-reply@agbande.com', 'AGBANDE'),
-            ],
         );
     }
 

@@ -12,38 +12,46 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        ##======== CREATION D'UN ADMIN PAR DEFAUT ============####
+        $userData = [
+            'firstname' => 'Christian',
+            'lastname' => 'GOGO',
+            'email' => 'admin@gmail.com',
+            'password' => '$2y$10$CI5P59ICr/HOihqlnYUrLeKwCajgMKd34HB66.JsJBrIOQY9fazrG', #admin
+            'phone' => "22961765590",
+        ];
+
+        $user = \App\Models\User::factory()->create($userData);
 
         ##======== CREATION DES ROLES PAR DEFAUT ============####
 
         \App\Models\Role::factory()->create([
-            'role'=>'is_transporter'
+            'label' => 'is_transporter'
         ]);
 
         \App\Models\Role::factory()->create([
-            'role'=>'is_sender'
+            'label' => 'is_sender'
+        ]);
+        $role_admin = \App\Models\Role::factory()->create([
+            'label' => 'is_admin'
         ]);
         \App\Models\Role::factory()->create([
-            'role'=>'is_admin'
+            'label' => 'is_supervisor'
         ]);
         \App\Models\Role::factory()->create([
-            'role'=>'is_supervisor'
+            'label' => 'is_shipper'
         ]);
         \App\Models\Role::factory()->create([
-            'role'=>'is_shipper'
-        ]);
-        \App\Models\Role::factory()->create([
-            'role'=>'is_biller'
+            'label' => 'is_biller'
         ]);
 
+        ###========= AFFECTATION DU ROLE **is_admin** AU USER ADMIN =========### 
+        $user->roles()->attach($role_admin);
 
-         ##======== CREATION DES TYPES DE MOYEN DE TRANSPORT PAR DEFAUT ============####
 
-         \App\Models\Type::factory(10)->create();
+        ##======== CREATION DES TYPES DE MOYEN DE TRANSPORT PAR DEFAUT ============####
+
+        \App\Models\Type::factory(10)->create();
     }
 }
