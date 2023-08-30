@@ -4,6 +4,57 @@ use App\Mail\SendEmail;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 
+####_____________
+
+function userCount()
+{
+    return count(User::all()) + 1;
+}
+
+function Custom_Timestamp()
+{
+    $date = new DateTimeImmutable();
+    $micro = (int)$date->format('Uu'); // Timestamp in microseconds
+    return $micro;
+}
+
+function Get_Username($user, $type)
+{
+    $created_date = $user->created_at;
+
+    $year = explode("-", $created_date)[0]; ##RECUPERATION DES TROIS PREMIERS LETTRES DU USERNAME
+    $an = substr($year, -2);
+
+    $username =  $type . $an . userCount();
+    return $username;
+}
+
+##Ce Helper permet de creér le passCode de réinitialisation de mot de passe
+function Get_passCode($user, $type)
+{
+    $created_date = $user->created_at;
+
+    $year = explode("-", $created_date)[0]; ##RECUPERATION DES TROIS PREMIERS LETTRES DU USERNAME
+    $an = substr($year, -2);
+    $timestamp = substr(Custom_Timestamp(), -3);
+
+    $passcode =  $timestamp . $type . $an . userCount();
+    return $passcode;
+}
+
+##Ce Helper permet de creér le passCode de réinitialisation de mot de passe
+function Get_compte_active_Code($user, $type)
+{
+    $created_date = $user->created_at;
+
+    $year = explode("-", $created_date)[0]; ##RECUPERATION DES TROIS PREMIERS LETTRES DU USERNAME
+    $an = substr($year, -2);
+    $timestamp = substr(Custom_Timestamp(), -3);
+
+    $passcode =  $timestamp . $type . $an . userCount();
+    return $passcode;
+}
+
 function Send_Email($email, $subject, $message)
 {
     $data = [

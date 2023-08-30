@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'password' => '$2y$10$CI5P59ICr/HOihqlnYUrLeKwCajgMKd34HB66.JsJBrIOQY9fazrG', #admin
             'phone' => "22961765590",
+            'compte_actif' => true,
         ];
 
         $user = \App\Models\User::factory()->create($userData);

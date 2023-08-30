@@ -26,11 +26,12 @@ Route::prefix('v1')->group(function () {
         Route::any('register', 'Register');
         Route::any('login', 'Login');
         Route::middleware(['auth:api'])->get('logout', 'Logout');
-        Route::any('users','Users');
-        Route::any('users/{id}','RetrieveUser');
+        Route::any('users', 'Users');
+        Route::any('active_account', 'AccountActivation');
+        Route::any('users/{id}', 'RetrieveUser');
     });
-    
-    Route::any('authorization',[Authorization::class,'Authorization'])->name('authorization');
+
+    Route::any('authorization', [Authorization::class, 'Authorization'])->name('authorization');
 
     ###========== TRANSPORTs ROUTINGS========###
     Route::prefix('transports')->group(function () {
@@ -38,20 +39,20 @@ Route::prefix('v1')->group(function () {
             Route::any('/create', 'Create');
             Route::any('/all', '_Transports'); #RECUPERER TOUTS LES MOYENS DE TRANSPORT
             Route::any('/{id}/retrieve', 'Retrieve'); #RECUPERER UN SEUL MOYENS DE TRANSPORT
-            Route::any('/{id}/update', 'Update');#MODIFIER UN SEUL MOYEN DE TRANSPORT
-            Route::any('/{id}/delete', 'Delete');#SUPPRIMER UN MOYEN DE TRANSPORT
+            Route::any('/{id}/update', 'Update'); #MODIFIER UN SEUL MOYEN DE TRANSPORT
+            Route::any('/{id}/delete', 'Delete'); #SUPPRIMER UN MOYEN DE TRANSPORT
         });
 
         Route::prefix('types')->group(function () {
             Route::controller(TransportType::class)->group(function () {
-                Route::any('/create', 'Create');#CREER UN TYPE DE MOYEN DE TRANSPORT
+                Route::any('/create', 'Create'); #CREER UN TYPE DE MOYEN DE TRANSPORT
                 Route::any('all', 'transportTypes'); #RECUPERER TOUTS LES TYPES DE MOYENS DE TRANSPORT
-    
+
                 Route::any('/{id}/retrieve', 'Retrieve'); #RECUPERER UN SEUL TYPE DE MOYENS DE TRANSPORT
-                Route::any('/{id}/update', 'Update');#MODIFIER UN TYPE DE MOYEN DE TRANSPORT
-                Route::any('/{id}/delete', 'Delete');#SUPPRIMER UN TYPE DE MOYEN DE TRANSPORT
-    
-                Route::any('/search', 'Search');#RECHERCHER UN TYPE DE MOYEN DE TRANSPORT
+                Route::any('/{id}/update', 'Update'); #MODIFIER UN TYPE DE MOYEN DE TRANSPORT
+                Route::any('/{id}/delete', 'Delete'); #SUPPRIMER UN TYPE DE MOYEN DE TRANSPORT
+
+                Route::any('/search', 'Search'); #RECHERCHER UN TYPE DE MOYEN DE TRANSPORT
             });
         });
     });
@@ -65,19 +66,19 @@ Route::prefix('v1')->group(function () {
             Route::any('user/{id}/validated', 'ValidatedForUser'); #RECUPERER TOUTS LES FRETS VALIDES D'UN USER
 
             Route::any('/{id}/retrieve', 'Retrieve'); #RECUPERER UN SEUL FRET
-            Route::any('/{id}/update', 'Update');#MODIFIER UN FRET
-            Route::any('/{id}/delete', 'Delete');#SUPPRIMER UN FRET
+            Route::any('/{id}/update', 'Update'); #MODIFIER UN FRET
+            Route::any('/{id}/delete', 'Delete'); #SUPPRIMER UN FRET
         });
     });
 
-    Route::prefix('notifications')->group(function(){
-        Route::controller(Notifications::class)->group(function(){
-            Route::any('','_AllNotifications');#RECUPERER TOUTES LES NOTIFICATIONS
-            Route::any('/create','Create');#CREER UNE NOTIFICATION
-            Route::any('/{id}/notification','Retrieve');#RECUPERER UNE NOTIFICATION VIA SON **id**
-            Route::any('/{id}/retreive','NotificationsReceived');#RECUPERER TOUTES LES NOTIFICATION RECU POUR UN USER VIA SON **RECEIVER_ID**
-            Route::any('/{id}/update', 'Update');#MODIFIER UNE NOTIFICATION
-            Route::any('/{id}/delete','Delete');#SUPPRESSION D'UNE NOTIFICATION
+    Route::prefix('notifications')->group(function () {
+        Route::controller(Notifications::class)->group(function () {
+            Route::any('', '_AllNotifications'); #RECUPERER TOUTES LES NOTIFICATIONS
+            Route::any('/create', 'Create'); #CREER UNE NOTIFICATION
+            Route::any('/{id}/notification', 'Retrieve'); #RECUPERER UNE NOTIFICATION VIA SON **id**
+            Route::any('/{id}/retreive', 'NotificationsReceived'); #RECUPERER TOUTES LES NOTIFICATION RECU POUR UN USER VIA SON **RECEIVER_ID**
+            Route::any('/{id}/update', 'Update'); #MODIFIER UNE NOTIFICATION
+            Route::any('/{id}/delete', 'Delete'); #SUPPRESSION D'UNE NOTIFICATION
         });
     });
 });

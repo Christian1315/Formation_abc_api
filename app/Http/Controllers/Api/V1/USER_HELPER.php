@@ -18,7 +18,7 @@ class USER_HELPER extends BASE_HELPER
             'expeditor' => ['required', "boolean"],
             'firstname' => 'required',
             'lastname' => 'required',
-            'phone' => ['required', "integer"],
+            'phone' => ['required', "integer", Rule::unique("users")],
             'email' => ['required', 'email', Rule::unique('users')],
             'password' => ['required', Rule::unique('users')],
         ];
@@ -33,6 +33,7 @@ class USER_HELPER extends BASE_HELPER
             'lastname.required' => 'Le champ Lastname est réquis!',
             'phone.required' => 'Le champ Phone est réquis!',
             'phone.integer' => 'Le champ Phone doit être un entier!',
+            'phone.unique' => 'Ce Phone existe déjà!',
             'email.required' => 'Le champ Email est réquis!',
             'email.email' => 'Ce champ est un mail!',
             'email.unique' => 'Ce mail existe déjà!',
@@ -95,13 +96,29 @@ class USER_HELPER extends BASE_HELPER
         #AFFECTATION DU ROLE **$role** AU USER **$user** 
         $user->roles()->attach($role);
 
+
+        $active_compte_code = Get_compte_active_Code($user, "ACT");
+        $user->active_compte_code = $active_compte_code;
+        $user->compte_actif = 0;
+        $user->save();
+
         #=====ENVOIE D'EMAIL =======~####
         $message = "Votre Compte a été crée avec succès sur AGBANDE";
+        $compte_activation_msg = "Votre compte n'est pas encore actif. Veuillez l'activer en utilisant le code ci-dessous : " . $active_compte_code;
+
+
         Send_Email(
             $user->email,
             "Création de compte sur AGBANDE",
             $message,
         );
+
+        Send_Email(
+            $user->email,
+            "Activation de compte sur AGBANDE",
+            $compte_activation_msg,
+        );
+
         return self::sendResponse($user, 'Compte crée avec succès!!');
     }
 
@@ -110,6 +127,12 @@ class USER_HELPER extends BASE_HELPER
         $credentials = ['email' => $request->email, 'password' => $request->password];
         if (Auth::attempt($credentials)) { #SI LE USER EST AUTHENTIFIE
             $user = Auth::user();
+
+            ###VERIFIONS SI LE COMPTE EST ACTIF
+            if (!$user->compte_actif) {
+                return self::sendError("Ce compte n'est pas actif! Veuillez l'activer", 404);
+            }
+
             $token = $user->createToken('MyToken', ['api-access'])->accessToken;
             $user['roles'] = $user->roles;
             $user['notifications'] = $user->notifications;
@@ -121,6 +144,28 @@ class USER_HELPER extends BASE_HELPER
 
         #RENVOIE D'ERREURE VIA **sendResponse** DE LA CLASS BASE_HELPER
         return self::sendError('Connexion échouée! Vérifiez vos données puis réessayez à nouveau!', 500);
+    }
+
+    static function activateAccount($request)
+    {
+        if (!$request->get("active_compte_code")) {
+            return self::sendError("Le Champ **active_compte_code** est réquis", 505);
+        }
+        $user =  User::where(["active_compte_code" => $request->active_compte_code])->get();
+        if ($user->count() == 0) {
+            return self::sendError("Ce Code ne corresponds à aucun compte! Veuillez saisir le vrai code", 505);
+        }
+
+        $user = $user[0];
+        ###VERIFIONS SI LE COMPTE EST ACTIF DEJA
+
+        if ($user->compte_actif) {
+            return self::sendError("Ce compte est déjà actif!", 505);
+        }
+
+        $user->compte_actif = 1;
+        $user->save();
+        return self::sendResponse($user, 'Votre compte à été activé avec succès!!');
     }
 
     static function getUsers()

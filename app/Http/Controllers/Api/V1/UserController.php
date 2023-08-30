@@ -11,7 +11,8 @@ class UserController extends USER_HELPER
     {
         $this->middleware(['auth:api', 'scope:api-access'])->except([
             "Register",
-            "Login"
+            "Login",
+            "AccountActivation"
         ]);
         $this->middleware("CheckIfUserIsAdmin")->only([
             "Users",
@@ -84,6 +85,18 @@ class UserController extends USER_HELPER
 
         #AUTHENTIFICATION DU USER
         return $this->userAuthentification($request);
+    }
+
+    #ACTIVATE AN ACCOUNT
+    function AccountActivation(Request $request)
+    {
+        #VERIFICATION DE LA METHOD
+        if ($this->methodValidation($request->method(), "POST") == False) {
+            #RENVOIE D'ERREURE VIA **sendError** DE LA CLASS BASE_HELPER HERITEE PAR USER_HELPER
+            return $this->sendError("La methode " . $request->method() . " n'est pas supportée pour cette requete!!", 404);
+        };
+
+        return $this->activateAccount($request);
     }
 
     function Logout(Request $request)
