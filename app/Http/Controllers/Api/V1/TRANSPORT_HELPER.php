@@ -13,12 +13,18 @@ class TRANSPORT_HELPER extends BASE_HELPER
     {
         return [
             'type_id' => 'required|integer',
+
             'fabric_year' => 'required',
             'circulation_year' => 'required',
-            'tech_visit' => 'required',
+            'assurance_expire' => 'required',
             'tech_visit_expire' => 'required',
+
             'gris_card' => 'required',
             'assurance_card' => 'required',
+
+            'img1' => 'required',
+            'img2' => 'required',
+            'img3' => 'required',
         ];
     }
 
@@ -27,12 +33,19 @@ class TRANSPORT_HELPER extends BASE_HELPER
         return [
             'type_id.required' => 'Veuillez précisez le type de moyen de transport que vous essayez d\'ajouter',
             'type_id.integer' => 'Ce champ requiert un entier',
+
             'fabric_year.required' => 'Veuillez precisez la date de fabrication!',
             'circulation_year.required' => 'Veuillez precisez la date de la mise en circulation!',
-            'tech_visit.required' => 'envoyer une photo de la visite technique!',
+
+            'assurance_expire.required' => 'Veuillez precisez la date d\'expiration de la carte d\'assurance!',
             'tech_visit_expire.required' => 'Veuillez precisez la date d\'expiration de la visite technique!',
+
             'gris_card.required' => 'Veuillez envoyer une photo de la carte grise!',
             'assurance_card.required' => 'Veuillez envoyer une photo de la carte d\'assurance!',
+
+            'img1.required' => 'Veuillez choisir la première photo du moyen de transport!',
+            'img2.required' => 'Veuillez choisir la deuxième photo du moyen de transport!',
+            'img3.required' => 'Veuillez choisir la troixième photo du moyen de transport!',
         ];
     }
 
@@ -49,7 +62,7 @@ class TRANSPORT_HELPER extends BASE_HELPER
     static function retrieveTransport($id)
     {
         $user = request()->user();
-        if (!IsUserAnAdmin()) { ##SI LE USER EST UN ADMIN
+        if (IsUserAnAdmin()) { ##SI LE USER EST UN ADMIN
             $transport = Transport::with(['owner', 'type'])->find($id);
             if (!$transport) {
                 return self::sendError('Ce moyen de transport n\'existe pas!', 404);
@@ -58,7 +71,6 @@ class TRANSPORT_HELPER extends BASE_HELPER
         }
 
         ### S'il est un simple user
-
         $transport = Transport::with(['owner', 'type'])->where(['owner' => $user->id, "id" => $id])->find($id);
         if (!$transport) {
             return self::sendError('Ce moyen de transport n\'existe pas!', 404);
@@ -70,6 +82,7 @@ class TRANSPORT_HELPER extends BASE_HELPER
     {
         $formData = $request->all();
 
+
         $type = Type::find($formData['type_id']);
         if (!$type) {
             return self::sendError('Ce type de moyen de transport n\' existe pas dans la DB!', 404);
@@ -78,20 +91,28 @@ class TRANSPORT_HELPER extends BASE_HELPER
         $gris_card = $request->file('gris_card');
         $img_name = $gris_card->getClientOriginalName();
         $request->file('gris_card')->move("gris_card", $img_name);
-
         $formData["gris_card"] = asset("gris_card/" . $img_name);
-
-        $tech_visit = $request->file('tech_visit');
-        $img_name = $tech_visit->getClientOriginalName();
-        $request->file('tech_visit')->move("tech_visit", $img_name);
-
-        $formData["tech_visit"] = asset("tech_visit/" . $img_name);
 
         $assurance_card = $request->file('assurance_card');
         $img_name = $assurance_card->getClientOriginalName();
         $request->file('assurance_card')->move("assurance_card", $img_name);
-
         $formData["assurance_card"] = asset("assurance_card/" . $img_name);
+
+        $img1 = $request->file('img1');
+        $img_name = $img1->getClientOriginalName();
+        $request->file('img1')->move("vehicule_images", $img_name);
+        $formData["img1"] = asset("vehicule_images/" . $img_name);
+
+        $img2 = $request->file('img2');
+        $img_name = $img2->getClientOriginalName();
+        $request->file('img2')->move("vehicule_images", $img_name);
+        $formData["img2"] = asset("vehicule_images/" . $img_name);
+
+        $img3 = $request->file('img3');
+        $img_name = $img3->getClientOriginalName();
+        $request->file('img3')->move("vehicule_images", $img_name);
+        $formData["img3"] = asset("vehicule_images/" . $img_name);
+
 
         ##ENREGISTREMENT DU TRANSPORT DANS LA DB
         $transport = Transport::create($formData); #ENREGISTREMENT DU USER DANS LA DB
@@ -104,7 +125,7 @@ class TRANSPORT_HELPER extends BASE_HELPER
     static function transports()
     {
         $user = request()->user();
-        if (!IsUserAnAdmin()) { ##SI LE USER EST UN ADMIN
+        if (IsUserAnAdmin()) { ##SI LE USER EST UN ADMIN
             $transports = Transport::with(['owner', 'type'])->orderBy('id', 'desc')->get();
             return self::sendResponse($transports, "Moyen de transports récupérés avec succès");
         }
@@ -154,6 +175,27 @@ class TRANSPORT_HELPER extends BASE_HELPER
             $request->file('assurance_card')->move("assurance_card", $img_name);
 
             $formData["assurance_card"] = asset("assurance_card/" . $img_name);
+        }
+
+        if ($request->file("img1")) {
+            $img1 = $request->file('img1');
+            $img_name = $img1->getClientOriginalName();
+            $request->file('img1')->move("vehicule_images", $img_name);
+            $formData["img1"] = asset("vehicule_images/" . $img_name);
+        }
+
+        if ($request->file("img2")) {
+            $img1 = $request->file('img2');
+            $img_name = $img1->getClientOriginalName();
+            $request->file('img2')->move("vehicule_images", $img_name);
+            $formData["img2"] = asset("vehicule_images/" . $img_name);
+        }
+
+        if ($request->file("img3")) {
+            $img1 = $request->file('img3');
+            $img_name = $img1->getClientOriginalName();
+            $request->file('img3')->move("vehicule_images", $img_name);
+            $formData["img3"] = asset("vehicule_images/" . $img_name);
         }
 
         $transport->update($formData);

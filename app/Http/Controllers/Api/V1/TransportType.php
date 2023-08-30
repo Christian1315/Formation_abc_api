@@ -38,13 +38,7 @@ class TransportType extends TRANSPORT_TYPE_HELPER
             return $this->sendError("La methode " . $request->method() . " n'est pas supportée pour cette requete!!", 404);
         };
 
-        $type = $this->findType($id); #RETOURNE **FALSE** QUAND LE TYPE DE MOYEN DE TRANSPORT N'EXISTE PAS & **$type** QUAND CE DERNIER EXISTE;
-
-        if (!$type) { #QUAND **$type** RETOURNE **FALSE**
-            return self::sendError('Ce type de moyen de transport n\'existe pas!', 404);
-        };
-
-        return $this->sendResponse($type, 'Type Moyen de transport récupéré avec succès!!');
+        return $this->_retrieveTransportType($id);
     }
 
     #CREATION D'UN MOYENS DE TRANSPORT
@@ -77,7 +71,7 @@ class TransportType extends TRANSPORT_TYPE_HELPER
             return $this->sendError("La methode " . $request->method() . " n'est pas supportée pour cette requete!!", 404);
         };
 
-        return $this->updateTransporType($request,$id);
+        return $this->updateTransporType($request, $id);
     }
 
     #SUPPRESSION D'UN TYPE DE MOYENS DE TRANSPORT

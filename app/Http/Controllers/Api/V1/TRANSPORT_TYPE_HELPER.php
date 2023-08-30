@@ -36,6 +36,17 @@ class TRANSPORT_TYPE_HELPER extends BASE_HELPER
         return $validator;
     }
 
+    function _retrieveTransportType($id)
+    {
+        $type = Type::find($id);
+
+        if (!$type) {
+            return self::sendError('Ce type de moyen de transport n\'existe pas!', 404);
+        };
+
+        return self::sendResponse($type, "Type de transport récupére avec succès!");
+    }
+
     static function types()
     {
         #RECUPERATION DE TOUT LES TYPES DE MOYENS DE TRANSPORTSR

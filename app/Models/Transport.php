@@ -14,11 +14,16 @@ class Transport extends Model
         'fabric_year',
         'circulation_year',
         'tech_visit_expire',
+        'assurance_expire',
+
         'gris_card',
         'assurance_card',
-        'tech_visit',
+        
+        "img1",
+        "img2",
+        "img3",
+
         'type_id',
-        'is_validated',
     ];
 
     protected $hidden = [

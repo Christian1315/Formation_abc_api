@@ -27,10 +27,16 @@ return new class extends Migration
 
             $table->string('fabric_year');
             $table->string('circulation_year');
+            $table->string('assurance_expire');
             $table->string('tech_visit_expire');
+            
             $table->string('gris_card');
             $table->string('assurance_card');
-            $table->string('tech_visit');
+
+            $table->string('img1');
+            $table->string('img2');
+            $table->string('img3');
+
             $table->boolean('is_validated')->default(false);
             $table->timestamps();
         });
