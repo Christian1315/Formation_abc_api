@@ -36,11 +36,7 @@ Route::prefix('v1')->group(function () {
     Route::prefix('transports')->group(function () {
         Route::controller(TransportController::class)->group(function () {
             Route::any('/create', 'Create');
-            Route::any('/', 'ForAll'); #RECUPERER TOUTS LES MOYENS DE TRANSPORT
-            Route::any('user/{id}', 'ForUser'); #RECUPERER TOUTS LES MOYENS DE TRANSPORT D'UN USER
-            Route::any('user/{id}/validated', 'ValidatedForUser'); #RECUPERER TOUTS LES MOYENS DE TRANSPORT VALIDES D'UN USER
-
-
+            Route::any('/all', '_Transports'); #RECUPERER TOUTS LES MOYENS DE TRANSPORT
             Route::any('/{id}/retrieve', 'Retrieve'); #RECUPERER UN SEUL MOYENS DE TRANSPORT
             Route::any('/{id}/update', 'Update');#MODIFIER UN SEUL MOYEN DE TRANSPORT
             Route::any('/{id}/delete', 'Delete');#SUPPRIMER UN MOYEN DE TRANSPORT
@@ -49,7 +45,7 @@ Route::prefix('v1')->group(function () {
         Route::prefix('types')->group(function () {
             Route::controller(TransportType::class)->group(function () {
                 Route::any('/create', 'Create');#CREER UN TYPE DE MOYEN DE TRANSPORT
-                Route::any('', 'transportTypes'); #RECUPERER TOUTS LES TYPES DE MOYENS DE TRANSPORT
+                Route::any('all', 'transportTypes'); #RECUPERER TOUTS LES TYPES DE MOYENS DE TRANSPORT
     
                 Route::any('/{id}/retrieve', 'Retrieve'); #RECUPERER UN SEUL TYPE DE MOYENS DE TRANSPORT
                 Route::any('/{id}/update', 'Update');#MODIFIER UN TYPE DE MOYEN DE TRANSPORT

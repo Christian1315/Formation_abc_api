@@ -13,16 +13,17 @@ return new class extends Migration
     {
         Schema::create('transports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
-                ->nullable()->constrained(table: 'users')
+            $table->foreignId('owner')
+                ->nullable()
+                ->constrained('users', "id")
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
             $table->foreignId('type_id')
-            ->nullable()
-            ->constrained(table: 'types')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+                ->nullable()
+                ->constrained('types', "id")
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
 
             $table->string('fabric_year');
             $table->string('circulation_year');

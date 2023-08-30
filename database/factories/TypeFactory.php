@@ -17,8 +17,8 @@ class TypeFactory extends Factory
     public function definition(): array
     {
         return [
-            'image'=>fake()->url,
-            'name'=>fake()->title,
+            // 'image'=>fake()->url,
+            // 'name'=>fake()->title,
         ];
     }
 }

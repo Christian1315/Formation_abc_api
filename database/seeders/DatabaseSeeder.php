@@ -52,6 +52,24 @@ class DatabaseSeeder extends Seeder
 
         ##======== CREATION DES TYPES DE MOYEN DE TRANSPORT PAR DEFAUT ============####
 
-        \App\Models\Type::factory(10)->create();
+        $transportTypes = [
+            [
+                "name" => "Camion",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "Car",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "Train",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+        ];
+
+        foreach ($transportTypes as $transportType) {
+            # code...
+            \App\Models\Type::factory()->create($transportType);
+        }
     }
 }
