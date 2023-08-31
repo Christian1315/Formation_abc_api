@@ -6,7 +6,6 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class USER_HELPER extends BASE_HELPER
@@ -60,7 +59,7 @@ class USER_HELPER extends BASE_HELPER
     static function login_rules(): array
     {
         return [
-            'email' => 'required',
+            'account' => 'required',
             'password' => 'required',
         ];
     }
@@ -68,8 +67,7 @@ class USER_HELPER extends BASE_HELPER
     static function login_messages(): array
     {
         return [
-            'email.required' => 'Le champ Email est réquis!',
-            'email.email' => 'Ce champ est un mail!',
+            'account.required' => 'Le champ Account est réquis!',
             'password.required' => 'Le champ Password est réquis!',
         ];
     }
@@ -136,7 +134,13 @@ class USER_HELPER extends BASE_HELPER
 
     static function userAuthentification($request)
     {
-        $credentials = ['email' => $request->email, 'password' => $request->password];
+
+        if (is_numeric($request->get('account'))) {
+            $credentials  =  ['phone' => $request->get('account'), 'password' => $request->get('password')];
+        } elseif (filter_var($request->get('account'), FILTER_VALIDATE_EMAIL)) {
+            $credentials  =  ['email' => $request->get('account'), 'password' => $request->get('password')];
+        }
+
         if (Auth::attempt($credentials)) { #SI LE USER EST AUTHENTIFIE
             $user = Auth::user();
 
