@@ -16,6 +16,7 @@ class USER_HELPER extends BASE_HELPER
     {
         return [
             'expeditor' => ['required', "boolean"],
+            'transporter' => ['required', "boolean"],
             'firstname' => 'required',
             'lastname' => 'required',
             'phone' => ['required', "integer", Rule::unique("users")],
@@ -29,6 +30,9 @@ class USER_HELPER extends BASE_HELPER
         return [
             'expeditor.required' => 'Le champ **expeditor** est réquis!',
             'expeditor.boolean' => 'Le champ **expeditor** doit être un boolean!',
+            'expeditor.transporter' => 'Le champ **transporter** est réquis!',
+            'expeditor.transporter' => 'Le champ **transporter** doit être un boolean!',
+
             'firstname.required' => 'Le champ Firstname est réquis!',
             'lastname.required' => 'Le champ Lastname est réquis!',
             'phone.required' => 'Le champ Phone est réquis!',
@@ -84,10 +88,18 @@ class USER_HELPER extends BASE_HELPER
     static function createUser($formData)
     {
         $expeditor = $formData["expeditor"];
+        $transporter = $formData["transporter"];
+
+        if ($expeditor == $transporter) {
+            return self::sendError("Désolé! Soit vous êtes un Expéditeur ou soit un Transporteur!", 505);
+        };
+
         $role = null;
         if ($expeditor) { ##IL S'AGIT D'UN EXPEDITEUR(is_sender)
             $role = Role::find(2); ###ROLE D'UN EXPEDITEUR(is_sender)
-        } else {
+        }
+
+        if ($transporter) {
             $role = Role::find(1); ###ROLE D'UN TRANSPORTEUR(is_transporter)
         };
 

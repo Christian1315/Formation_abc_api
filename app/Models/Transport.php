@@ -11,6 +11,7 @@ class Transport extends Model
     use HasFactory;
 
     protected $fillable = [
+        "name",
         'fabric_year',
         'circulation_year',
         'tech_visit_expire',
@@ -18,7 +19,7 @@ class Transport extends Model
 
         'gris_card',
         'assurance_card',
-        
+
         "img1",
         "img2",
         "img3",
@@ -30,15 +31,18 @@ class Transport extends Model
         'type_id'
     ];
 
-    #ONE TO MANY\INVERSE RELATIONSHIP(UN MOYENS DE TRANSPORT PEUT APPARTENIR A UN ET UN SEUL USER[celui qui a le role **is_transporter**])
     function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, "owner")->with("roles");
     }
 
-    #ONE TO MANY\INVERSE RELATIONSHIP(UN MOYENS DE TRANSPORT PEUT APPARTENIR A UN ET UN SEUL TYPE DE MOYEN DE TRANSPORT)
     function type(): BelongsTo
     {
         return $this->belongsTo(Type::class, "type_id");
+    }
+
+    function status(): BelongsTo
+    {
+        return $this->belongsTo(TransportStatus::class, "status");
     }
 }

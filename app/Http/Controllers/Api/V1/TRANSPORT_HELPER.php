@@ -12,6 +12,7 @@ class TRANSPORT_HELPER extends BASE_HELPER
     static function transport_rules(): array
     {
         return [
+            "name" => "required",
             'type_id' => 'required|integer',
 
             'fabric_year' => 'required',
@@ -31,6 +32,7 @@ class TRANSPORT_HELPER extends BASE_HELPER
     static function transport_messages(): array
     {
         return [
+            'name.required' => 'Veuillez précisez le nom du moyen de transport que vous essayez d\'ajouter',
             'type_id.required' => 'Veuillez précisez le type de moyen de transport que vous essayez d\'ajouter',
             'type_id.integer' => 'Ce champ requiert un entier',
 
@@ -63,7 +65,7 @@ class TRANSPORT_HELPER extends BASE_HELPER
     {
         $user = request()->user();
         if (IsUserAnAdmin()) { ##SI LE USER EST UN ADMIN
-            $transport = Transport::with(['owner', 'type'])->find($id);
+            $transport = Transport::with(['owner', 'type', "status"])->find($id);
             if (!$transport) {
                 return self::sendError('Ce moyen de transport n\'existe pas!', 404);
             };
@@ -71,7 +73,7 @@ class TRANSPORT_HELPER extends BASE_HELPER
         }
 
         ### S'il est un simple user
-        $transport = Transport::with(['owner', 'type'])->where(['owner' => $user->id, "id" => $id])->find($id);
+        $transport = Transport::with(['owner', 'type', "status"])->where(['owner' => $user->id, "id" => $id])->find($id);
         if (!$transport) {
             return self::sendError('Ce moyen de transport n\'existe pas!', 404);
         };
@@ -81,7 +83,6 @@ class TRANSPORT_HELPER extends BASE_HELPER
     static function createTransport($request)
     {
         $formData = $request->all();
-
 
         $type = Type::find($formData['type_id']);
         if (!$type) {
@@ -117,6 +118,7 @@ class TRANSPORT_HELPER extends BASE_HELPER
         ##ENREGISTREMENT DU TRANSPORT DANS LA DB
         $transport = Transport::create($formData); #ENREGISTREMENT DU USER DANS LA DB
         $transport->owner = request()->user()->id;
+        $transport->status = 1;
         $transport->save();
 
         return self::sendResponse($transport, 'Moyen de transport ajouté avec succès!!');
@@ -126,15 +128,15 @@ class TRANSPORT_HELPER extends BASE_HELPER
     {
         $user = request()->user();
         if (IsUserAnAdmin()) { ##SI LE USER EST UN ADMIN
-            $transports = Transport::with(['owner', 'type'])->orderBy('id', 'desc')->get();
+            $transports = Transport::with(['owner', 'type', "status"])->orderBy('id', 'desc')->get();
             return self::sendResponse($transports, "Moyen de transports récupérés avec succès");
         }
 
         ### S'il est un simple user
         ### il recupère seulement les transports qui lui appartiennent
 
-        $transports = Transport::with(['owner', 'type'])->where(['owner' => $user->id])->orderBy('id', 'desc')->get();
-        return self::sendResponse($transports, 'Listes des moyens de transport récupérés avec succès!!');
+        $transports = Transport::with(['owner', 'type', "status"])->where(['owner' => $user->id])->orderBy('id', 'desc')->get();
+        return self::sendResponse($transports, 'Liste des moyens de transport récupérés avec succès!!');
     }
 
     static function updateTransport($request, $id)

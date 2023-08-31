@@ -13,23 +13,24 @@ return new class extends Migration
     {
         Schema::create('transports', function (Blueprint $table) {
             $table->id();
+            $table->string("name");
             $table->foreignId('owner')
                 ->nullable()
                 ->constrained('users', "id")
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+                ->onUpdate('CASCADE')
+                ->onDelete('CASCADE');
 
             $table->foreignId('type_id')
                 ->nullable()
                 ->constrained('types', "id")
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+                ->onUpdate('CASCADE')
+                ->onDelete('CASCADE');
 
             $table->string('fabric_year');
             $table->string('circulation_year');
             $table->string('assurance_expire');
             $table->string('tech_visit_expire');
-            
+
             $table->string('gris_card');
             $table->string('assurance_card');
 
@@ -37,7 +38,11 @@ return new class extends Migration
             $table->string('img2');
             $table->string('img3');
 
-            $table->boolean('is_validated')->default(false);
+            $table->foreignId('status')
+                ->nullable()
+                ->constrained("transport_statuses", "id")
+                ->onUpdate('CASCADE')
+                ->onDelete('CASCADE');
             $table->timestamps();
         });
     }

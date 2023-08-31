@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\Authorization;
 use App\Http\Controllers\Api\V1\FretController;
 use App\Http\Controllers\Api\V1\TransportType;
 use App\Http\Controllers\Api\V1\Notifications;
+use App\Http\Controllers\Api\V1\TransportStatusController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -55,7 +56,17 @@ Route::prefix('v1')->group(function () {
                 Route::any('/search', 'Search'); #RECHERCHER UN TYPE DE MOYEN DE TRANSPORT
             });
         });
+
+        ###========== TRANSPORT STATUS ROUTINGS ========###
+        Route::controller(TransportStatusController::class)->group(function () {
+            Route::prefix('status')->group(function () {
+                Route::any('all', 'TransportStatus');
+                Route::any('{id}/retrieve', 'RetrieveTransportStatus');
+            });
+        });
     });
+
+
 
     ###========== FREts ROUTINGS========###
     Route::prefix('frets')->group(function () {

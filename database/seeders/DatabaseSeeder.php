@@ -12,7 +12,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-
         ##======== CREATION D'UN ADMIN PAR DEFAUT ============####
         $userData = [
             'firstname' => 'Christian',
@@ -69,8 +68,25 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($transportTypes as $transportType) {
-            # code...
             \App\Models\Type::factory()->create($transportType);
+        }
+
+
+        #=========== CREER DES STATUS D'UN TRANSPORT PAR DEFAUT ============#
+
+        $transport_status = [
+            [
+                "name" => "En cour",
+                "description" => "Ce moyen de transport est en cour de traitement!",
+            ],
+            [
+                "name" => "Validé",
+                "description" => "Ce moyen de transport est validé",
+            ],
+        ];
+
+        foreach ($transport_status as $transport_statu) {
+            \App\Models\TransportStatus::factory()->create($transport_statu);
         }
     }
 }
