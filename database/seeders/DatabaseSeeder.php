@@ -91,10 +91,18 @@ class DatabaseSeeder extends Seeder
 
         #=========== CREER DES STATUS D'UN EXPEDITEUR PAR DEFAUT ============#
 
-        $expediteur_status = [
+        $fret_status = [
             [
-                "name" => "En attente",
+                "name" => "En cours",
                 "description" => "Ce Fret est en cour de traitement!",
+            ],
+            [
+                "name" => "Programmé",
+                "description" => "Ce Fret est programmé!",
+            ],
+            [
+                "name" => "Terminé",
+                "description" => "Ce Fret est en attente de traitement!",
             ],
             [
                 "name" => "Publié",
@@ -102,8 +110,34 @@ class DatabaseSeeder extends Seeder
             ],
         ];
 
-        foreach ($expediteur_status as $expediteur_statu) {
-            \App\Models\FretStatus::factory()->create($expediteur_statu);
+        foreach ($fret_status as $fret_statu) {
+            \App\Models\FretStatus::factory()->create($fret_statu);
+        }
+
+
+        #=========== CREER DES TYPES DE FRET PAR DEFAUT ============#
+
+        $fret_types = [
+            [
+                "name" => "Alimentaire",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "Produit agricole",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "Matériel de Construction",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "Divers",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+        ];
+
+        foreach ($fret_types as $fret_type) {
+            \App\Models\FretType::factory()->create($fret_type);
         }
     }
 }

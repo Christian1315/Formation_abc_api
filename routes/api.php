@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\V1\FretController;
 use App\Http\Controllers\Api\V1\TransportType;
 use App\Http\Controllers\Api\V1\Notifications;
 use App\Http\Controllers\Api\V1\TransportStatusController;
+use App\Http\Controllers\Api\V1\FretStatusController;
+use App\Models\FretType;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -78,6 +80,27 @@ Route::prefix('v1')->group(function () {
             Route::any('/{id}/retrieve', '_Retrieve'); #RECUPERER UN SEUL FRET
             Route::any('/{id}/update', 'Update'); #MODIFIER UN FRET
             Route::any('/{id}/delete', 'Delete'); #SUPPRIMER UN FRET
+        });
+
+        Route::prefix('types')->group(function () {
+            Route::controller(FretType::class)->group(function () {
+                Route::any('/create', 'Create');
+                Route::any('all', 'transportTypes');
+
+                Route::any('/{id}/retrieve', 'Retrieve');
+                Route::any('/{id}/update', 'Update');
+                Route::any('/{id}/delete', 'Delete');
+
+                Route::any('/search', 'Search');
+            });
+        });
+
+        ###========== FRET STATUS ROUTINGS ========###
+        Route::controller(FretStatusController::class)->group(function () {
+            Route::prefix('status')->group(function () {
+                Route::any('all', 'FretStatus');
+                Route::any('{id}/retrieve', 'RetrieveFretStatus');
+            });
         });
     });
 
