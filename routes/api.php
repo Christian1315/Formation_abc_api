@@ -29,6 +29,9 @@ Route::prefix('v1')->group(function () {
         Route::middleware(['auth:api'])->get('logout', 'Logout');
         Route::any('users', 'Users');
         Route::any('active_account', 'AccountActivation');
+        Route::any('password/update', 'UpdatePassword');
+        Route::any('password/demand_reinitialize', 'DemandReinitializePassword');
+        Route::any('password/reinitialize', 'ReinitializePassword');
         Route::any('users/{id}', 'RetrieveUser');
     });
 
@@ -67,16 +70,12 @@ Route::prefix('v1')->group(function () {
     });
 
 
-
     ###========== FREts ROUTINGS========###
     Route::prefix('frets')->group(function () {
         Route::controller(FretController::class)->group(function () {
             Route::any('/create', 'Create');
-            Route::any('/', 'ForAll'); #RECUPERER TOUTS LES FRETS
-            Route::any('user/{id}', 'ForUser'); #RECUPERER TOUTS LES FRETS D'UN USER
-            Route::any('user/{id}/validated', 'ValidatedForUser'); #RECUPERER TOUTS LES FRETS VALIDES D'UN USER
-
-            Route::any('/{id}/retrieve', 'Retrieve'); #RECUPERER UN SEUL FRET
+            Route::any('all', '_Frets'); #RECUPERER TOUTS LES FRETS
+            Route::any('/{id}/retrieve', '_Retrieve'); #RECUPERER UN SEUL FRET
             Route::any('/{id}/update', 'Update'); #MODIFIER UN FRET
             Route::any('/{id}/delete', 'Delete'); #SUPPRIMER UN FRET
         });

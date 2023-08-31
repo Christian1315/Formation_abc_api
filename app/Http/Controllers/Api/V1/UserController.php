@@ -12,7 +12,9 @@ class UserController extends USER_HELPER
         $this->middleware(['auth:api', 'scope:api-access'])->except([
             "Register",
             "Login",
-            "AccountActivation"
+            "AccountActivation",
+            "DemandReinitializePassword",
+            "ReinitializePassword",
         ]);
         $this->middleware("CheckIfUserIsAdmin")->only([
             "Users",
@@ -38,6 +40,52 @@ class UserController extends USER_HELPER
 
         #ENREGISTREMENT DANS LA DB VIA **createUser** DE LA CLASS BASE_HELPER HERITEE PAR USER_HELPER
         return $this->createUser($request->all());
+    }
+
+    #MODIFIER UN PASSWORD
+    function UpdatePassword(Request $request)
+    {
+        #VERIFICATION DE LA METHOD
+        if ($this->methodValidation($request->method(), "POST") == False) {
+            #RENVOIE D'ERREURE VIA **sendError** DE LA CLASS BASE_HELPER HERITEE PAR USER_HELPER
+            return $this->sendError("La methode " . $request->method() . " n'est pas supportée pour cette requete!!", 404);
+        };
+
+        #VALIDATION DES DATAs DEPUIS LA CLASS USER_HELPER
+        $validator = $this->NEW_PASSWORD_Validator($request->all());
+        if ($validator->fails()) {
+            #RENVOIE D'ERREURE VIA **sendResponse** DE LA CLASS USER_HELPER
+            return $this->sendError($validator->errors(), 404);
+        }
+
+        #RECUPERATION D'UN USER VIA SON **id**
+        return $this->_updatePassword($request->all());
+    }
+
+    #DEMANDE DE REINITIALISATION D'UN PASSWORD
+    function DemandReinitializePassword(Request $request)
+    {
+        #VERIFICATION DE LA METHOD
+        if ($this->methodValidation($request->method(), "POST") == False) {
+            #RENVOIE D'ERREURE VIA **sendError** DE LA CLASS BASE_HELPER HERITEE PAR USER_HELPER
+            return $this->sendError("La methode " . $request->method() . " n'est pas supportée pour cette requete!!", 404);
+        };
+
+        #RECUPERATION D'UN USER VIA SON **id**
+        return $this->_demandReinitializePassword($request);
+    }
+
+    #REINITIALISER UN PASSWORD
+    function ReinitializePassword(Request $request)
+    {
+        #VERIFICATION DE LA METHOD
+        if ($this->methodValidation($request->method(), "POST") == False) {
+            #RENVOIE D'ERREURE VIA **sendError** DE LA CLASS BASE_HELPER HERITEE PAR USER_HELPER
+            return $this->sendError("La methode " . $request->method() . " n'est pas supportée pour cette requete!!", 404);
+        };
+
+        #RECUPERATION D'UN USER VIA SON **id**
+        return $this->_reinitializePassword($request);
     }
 
     #GET ALL USERS

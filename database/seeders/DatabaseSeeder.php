@@ -88,5 +88,22 @@ class DatabaseSeeder extends Seeder
         foreach ($transport_status as $transport_statu) {
             \App\Models\TransportStatus::factory()->create($transport_statu);
         }
+
+        #=========== CREER DES STATUS D'UN EXPEDITEUR PAR DEFAUT ============#
+
+        $expediteur_status = [
+            [
+                "name" => "En attente",
+                "description" => "Ce Fret est en cour de traitement!",
+            ],
+            [
+                "name" => "Publié",
+                "description" => "Ce Fret est validé",
+            ],
+        ];
+
+        foreach ($expediteur_status as $expediteur_statu) {
+            \App\Models\FretStatus::factory()->create($expediteur_statu);
+        }
     }
 }

@@ -6,6 +6,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class USER_HELPER extends BASE_HELPER
@@ -82,6 +83,32 @@ class USER_HELPER extends BASE_HELPER
         return $validator;
     }
 
+    ##======== NEW PASSWORD VALIDATION =======##
+    static function NEW_PASSWORD_rules(): array
+    {
+        return [
+            'old_password' => 'required',
+            'new_password' => 'required',
+        ];
+    }
+
+    static function NEW_PASSWORD_messages(): array
+    {
+        return [
+            // 'new_password.required' => 'Veuillez renseigner soit votre username,votre phone ou soit votre email',
+            // 'password.required' => 'Le champ Password est réquis!',
+        ];
+    }
+
+    static function NEW_PASSWORD_Validator($formDatas)
+    {
+        #
+        $rules = self::NEW_PASSWORD_rules();
+        $messages = self::NEW_PASSWORD_messages();
+
+        $validator = Validator::make($formDatas, $rules, $messages);
+        return $validator;
+    }
 
     static function createUser($formData)
     {
@@ -189,6 +216,109 @@ class USER_HELPER extends BASE_HELPER
 
         $users =  User::with(['transports', 'roles', 'frets', 'notifications'])->get();
         return self::sendResponse($users, 'Touts les utilisatreurs récupérés avec succès!!');
+    }
+
+    static function _updatePassword($formData)
+    {
+        $user = User::where(['id' => request()->user()->id])->get();
+        if (count($user) == 0) {
+            return self::sendError("Ce compte ne vous appartient pas!", 404);
+        };
+
+        #### VERIFIONS SI LE NOUVEAU PASSWORD CORRESPONDS ENCORE AU ANCIEN PASSWORD
+        if ($formData["old_password"] == $formData["new_password"]) {
+            return self::sendError('Le nouveau mot de passe ne doit pas etre identique à votre ancien mot de passe', 404);
+        }
+
+        if (Hash::check($formData["old_password"], $user[0]->password)) { #SI LE old_password correspond au password du user dans la DB
+            $user[0]->update(["password" => $formData["new_password"]]);
+            return self::sendResponse($user, 'Mot de passe modifié avec succès!');
+        }
+        return self::sendError("Votre mot de passe est incorrect", 505);
+    }
+
+    static function _demandReinitializePassword($request)
+    {
+
+        if (!$request->get("account")) {
+            return self::sendError("Le Champ account est réquis!", 404);
+        }
+        $account = $request->get("account");
+
+        $user = null;
+        if (is_numeric($account)) {
+            $user = User::where(['phone' => $account])->get();
+        } elseif (filter_var($account, FILTER_VALIDATE_EMAIL)) {
+            $user = User::where(['email' => $account])->get();
+        }
+        if (!$user) {
+            return self::sendError("Ce compte n'existe pas!", 404);
+        };
+
+        $user = $user[0];
+        $pass_code = Get_passCode($user, "PASS");
+        $user->pass_code = $pass_code;
+        $user->pass_code_active = 1;
+        $user->save();
+
+        $message = "Demande de réinitialisation éffectuée avec succès sur AGBANDE! Voici vos informations de réinitialisation de password ::" . $pass_code;
+
+        #=====ENVOIE D'EMAIL =======~####
+        Send_Email(
+            $user->email,
+            "Demande de réinitialisation de compte sur AGBANDE",
+            $message,
+        );
+
+        return self::sendResponse($user, "Demande de réinitialisation éffectuée avec succès! Un message vous a été envoyé par mail");
+    }
+
+    static function _reinitializePassword($request)
+    {
+
+        $pass_code = $request->get("pass_code");
+
+        if (!$pass_code) {
+            return self::sendError("Ce Champ pass_code est réquis!", 404);
+        }
+
+        $new_password = $request->get("new_password");
+
+        if (!$new_password) {
+            return self::sendError("Ce Champ new_password est réquis!", 404);
+        }
+
+        $user = User::where(['pass_code' => $pass_code])->get();
+
+        if (count($user) == 0) {
+            return self::sendError("Ce code n'est pas correct!", 404);
+        };
+
+        $user = $user[0];
+        #Voyons si le passs_code envoyé par le user est actif
+
+        if ($user->pass_code_active == 0) {
+            return self::sendError("Ce Code a déjà été utilisé une fois! Veuillez faire une autre demande de réinitialisation", 404);
+        }
+
+        #UPDATE DU PASSWORD
+        $user->update(['password' => $new_password]);
+
+        #SIGNALONS QUE CE pass_code EST D2J0 UTILISE
+        $user->pass_code_active = 0;
+        $user->save();
+
+
+        $message = "Réinitialisation de password éffectuée avec succès sur AGBANDE!";
+
+        #=====ENVOIE D'EMAIL =======~####
+        Send_Email(
+            $user->email,
+            "Réinitialisation de compte sur AGBANDE",
+            $message,
+        );
+
+        return self::sendResponse($user, "Réinitialisation éffectuée avec succès!");
     }
 
     static function retrieveUsers($id)

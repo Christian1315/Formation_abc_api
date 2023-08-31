@@ -18,17 +18,6 @@ function Custom_Timestamp()
     return $micro;
 }
 
-function Get_Username($user, $type)
-{
-    $created_date = $user->created_at;
-
-    $year = explode("-", $created_date)[0]; ##RECUPERATION DES TROIS PREMIERS LETTRES DU USERNAME
-    $an = substr($year, -2);
-
-    $username =  $type . $an . userCount();
-    return $username;
-}
-
 ##Ce Helper permet de creér le passCode de réinitialisation de mot de passe
 function Get_passCode($user, $type)
 {
@@ -91,5 +80,21 @@ function IsUserAnAdminOrTransporter()
             return true;
         }
         return false; #S'IL N'EST NI TRANSPORTEUR NI ADMIN
+    }
+}
+
+function IsUserAnAdminOrExpeditor()
+{
+    $user = request()->user();
+    $roles = $user->roles;
+    foreach ($roles as $role) {
+        if ($role->label == "is_sender") { #S'IL EST UN EXPEDITEUR
+            return true;
+        }
+
+        if ($role->label == "is_admin") { #S'IL EST UN ADMIN
+            return true;
+        }
+        return false; #S'IL N'EST NI EXPEDITEUR NI ADMIN
     }
 }

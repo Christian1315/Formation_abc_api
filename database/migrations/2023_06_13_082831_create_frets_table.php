@@ -13,11 +13,7 @@ return new class extends Migration
     {
         Schema::create('frets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
-                ->nullable()
-                ->constrained()
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+
             $table->string('name');
             $table->string('nature');
             $table->string('vol_or_quant');
@@ -26,7 +22,16 @@ return new class extends Migration
             $table->string('charg_destination');
             $table->integer('axles_num');
             $table->string('fret_img');
-            $table->boolean('is_validated')->default(false);
+            $table->foreignId('owner')
+                ->nullable()
+                ->constrained('users', "id")
+                ->onUpdate('CASCADE')
+                ->onDelete('CASCADE');
+            $table->foreignId('status')
+                ->nullable()
+                ->constrained("fret_statuses", "id")
+                ->onUpdate('CASCADE')
+                ->onDelete('CASCADE');
             $table->timestamps();
         });
     }

@@ -26,8 +26,13 @@ class Frets extends Model
         'user_id',
     ];
 
-    #ONE TO MANY\INVERSE RELATIONSHIP(UN FRET PEUT APPARTENIR A UN ET UN SEUL USER[celui qui a le role **is_sender**])
-    function user() : BelongsTo {
-        return $this->belongsTo(User::class);
+    function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, "owner");
+    }
+
+    function status(): BelongsTo
+    {
+        return $this->belongsTo(FretStatus::class, "status");
     }
 }
