@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\TransportType;
 use App\Http\Controllers\Api\V1\Notifications;
 use App\Http\Controllers\Api\V1\TransportStatusController;
 use App\Http\Controllers\Api\V1\FretStatusController;
+use App\Http\Controllers\Api\V1\FretTypeController;
 use App\Models\FretType;
 use Illuminate\Support\Facades\Route;
 
@@ -72,7 +73,7 @@ Route::prefix('v1')->group(function () {
     });
 
 
-    ###========== FREts ROUTINGS========###
+    ###========== FRETS ROUTINGS========###
     Route::prefix('frets')->group(function () {
         Route::controller(FretController::class)->group(function () {
             Route::any('/create', 'Create');
@@ -83,14 +84,12 @@ Route::prefix('v1')->group(function () {
         });
 
         Route::prefix('types')->group(function () {
-            Route::controller(FretType::class)->group(function () {
+            Route::controller(FretTypeController::class)->group(function () {
+                Route::any('all', 'FretTypes');
                 Route::any('/create', 'Create');
-                Route::any('all', 'transportTypes');
-
                 Route::any('/{id}/retrieve', 'Retrieve');
                 Route::any('/{id}/update', 'Update');
                 Route::any('/{id}/delete', 'Delete');
-
                 Route::any('/search', 'Search');
             });
         });

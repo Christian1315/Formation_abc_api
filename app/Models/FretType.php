@@ -17,6 +17,6 @@ class FretType extends Model
 
     function frets(): HasMany
     {
-        return $this->hasMany(Frets::class, "type");
+        return $this->hasMany(Frets::class, "fret_types");
     }
 }
