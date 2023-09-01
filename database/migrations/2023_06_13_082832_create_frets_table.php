@@ -17,14 +17,11 @@ return new class extends Migration
             $table->string('depart_date');
             $table->string('arrived_date');
 
-            $table->string('chargement_date');
-            $table->string('delivery_date');
-
-            $table->string('chargement_hour');
-            $table->string('delivery_hour');
+            $table->string('depart_map')->nullable();
+            $table->string('arrived_map')->nullable();
 
             ###MARCHANDISES
-            $table->foreignId('fret_types')
+            $table->foreignId('fret_type')
                 ->nullable()
                 ->constrained('types', "id")
                 ->onUpdate('CASCADE')
@@ -60,6 +57,15 @@ return new class extends Migration
                 ->constrained("fret_statuses", "id")
                 ->onUpdate('CASCADE')
                 ->onDelete('CASCADE');
+
+            ###MOYEN DE TRANSPORT ASSOCIE
+            $table->foreignId('transport_id')
+                ->nullable()
+                ->constrained("transports", "id")
+                ->onUpdate('CASCADE')
+                ->onDelete('CASCADE');
+
+            $table->boolean("affected")->default(false);
             $table->timestamps();
         });
     }

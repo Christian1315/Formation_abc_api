@@ -11,20 +11,24 @@ class Frets extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'name',
-        'nature',
-        'vol_or_quant',
-        'charg_date',
-        'charg_location',
-        'charg_destination',
-        'axles_num',
-        'fret_img',
+        'depart_date',
+        'arrived_date',
+        'chargement_date',
+        'delivery_hour',
+        'fret_type',
+        'weight',
+        'length',
+        'transport_type',
+        'transport_num',
+        'price',
+        'comment',
+        "depart_map",
+        "arrived_map",
     ];
 
-    protected $hidden = [
-        'user_id',
-    ];
+    // protected $hidden = [
+    //     'owner',
+    // ];
 
     function owner(): BelongsTo
     {
@@ -34,5 +38,20 @@ class Frets extends Model
     function status(): BelongsTo
     {
         return $this->belongsTo(FretStatus::class, "status");
+    }
+
+    function transport_type(): BelongsTo
+    {
+        return $this->belongsTo(Type::class, "transport_type");
+    }
+
+    function fret_type(): BelongsTo
+    {
+        return $this->belongsTo(FretType::class, "fret_type");
+    }
+
+    function transport(): BelongsTo
+    {
+        return $this->belongsTo(Transport::class, "transport_id")->with("owner");
     }
 }

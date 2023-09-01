@@ -13,7 +13,8 @@ class FretController extends FRET_HELPER
         $this->middleware("CheckIfUserIsAdminOrExpeditor")->only([
             "Create",
             "Update",
-            "Delete"
+            "Delete",
+            "AffectToTransport"
         ]);
     }
 
@@ -55,8 +56,7 @@ class FretController extends FRET_HELPER
             return $this->sendError($validator->errors(), 404);
         }
 
-        #ENREGISTREMENT DANS LA DB VIA **createTransport** DE LA CLASS BASE_HELPER HERITEE PAR FRET_HELPER
-        return $this->createFret($request->all());
+        return $this->createFret($request);
     }
 
     #MODIFICATION D'UN FRET
@@ -64,18 +64,13 @@ class FretController extends FRET_HELPER
     {
 
         #VERIFICATION DE LA METHOD
-        if ($this->methodValidation($request->method(), "PATCH") == False) {
+        if ($this->methodValidation($request->method(), "POST") == False) {
             #RENVOIE D'ERREURE VIA **sendError** DE LA CLASS BASE_HELPER HERITEE PAR FRET_HELPER
             return $this->sendError("La methode " . $request->method() . " n'est pas supportée pour cette requete!!", 404);
         };
 
-        $fret = $this->findFret($id); #RETOURNE **FALSE** QUAND LE FRET N'EXISTE PAS & **$fret** QUAND CE DERNIER EXISTE;
 
-        if (!$fret) { #QUAND **$fret** RETOURNE **FALSE**
-            return self::sendError('Ce Fret n\'existe pas!', 404);
-        };
-
-        return $this->updateFret($fret, $request->all());
+        return $this->updateFret($request, $id);
     }
 
     #SUPPRESION D'UN FRET
@@ -86,14 +81,19 @@ class FretController extends FRET_HELPER
             #RENVOIE D'ERREURE VIA **sendError** DE LA CLASS BASE_HELPER HERITEE PAR FRET_HELPER
             return $this->sendError("La methode " . $request->method() . " n'est pas supportée pour cette requete!!", 404);
         };
-
-        $fret = $this->findFret($id); #RETOURNE **FALSE** QUAND LE FRET N'EXISTE PAS & **$fret** QUAND CE DERNIER EXISTE;
-
-        if (!$fret) { #QUAND **$fret** RETOURNE **FALSE**
-            return self::sendError('Ce fret n\'existe pas!', 404);
-        };
-
-        $fret->delete(); #SUPPRESSION DU FRET;
-        return $this->sendResponse($fret, "Ce fret a été supprimé avec succès!!");
+        return $this->deleteFret($id);
     }
-}
+
+     #AFFECTATION D'UN FRET A UN TRANSPORT
+     public function AffectToTransport(Request $request)
+     {
+         #VERIFICATION DE LA METHOD
+         if ($this->methodValidation($request->method(), "POST") == False) {
+             #RENVOIE D'ERREURE VIA **sendError** DE LA CLASS BASE_HELPER HERITEE PAR FRET_HELPER
+             return $this->sendError("La methode " . $request->method() . " n'est pas supportée pour cette requete!!", 404);
+         };
+         return $this->_affectToTransport($request);
+     }
+ }
+
+

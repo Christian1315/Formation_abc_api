@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Transport extends Model
 {
@@ -27,9 +29,9 @@ class Transport extends Model
         'type_id',
     ];
 
-    protected $hidden = [
-        'type_id'
-    ];
+    // protected $hidden = [
+    //     'type_id'
+    // ];
 
     function owner(): BelongsTo
     {
@@ -44,5 +46,10 @@ class Transport extends Model
     function status(): BelongsTo
     {
         return $this->belongsTo(TransportStatus::class, "status");
+    }
+
+    function frets(): HasMany
+    {
+        return $this->hasMany(Frets::class, "transport_id")->with(["owner","status","fret_type"]);
     }
 }

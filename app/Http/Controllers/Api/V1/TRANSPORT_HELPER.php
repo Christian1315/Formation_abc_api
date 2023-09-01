@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Transport;
+use App\Models\TransportStatus;
 use App\Models\Type;
 use Illuminate\Support\Facades\Validator;
 
@@ -65,7 +66,7 @@ class TRANSPORT_HELPER extends BASE_HELPER
     {
         $user = request()->user();
         if (IsUserAnAdmin()) { ##SI LE USER EST UN ADMIN
-            $transport = Transport::with(['owner', 'type', "status"])->find($id);
+            $transport = Transport::with(['owner', 'type', "status", "frets"])->find($id);
             if (!$transport) {
                 return self::sendError('Ce moyen de transport n\'existe pas!', 404);
             };
@@ -73,7 +74,7 @@ class TRANSPORT_HELPER extends BASE_HELPER
         }
 
         ### S'il est un simple user
-        $transport = Transport::with(['owner', 'type', "status"])->where(['owner' => $user->id, "id" => $id])->find($id);
+        $transport = Transport::with(['owner', 'type', "status", "frets"])->where(['owner' => $user->id, "id" => $id])->find($id);
         if (!$transport) {
             return self::sendError('Ce moyen de transport n\'existe pas!', 404);
         };
@@ -128,14 +129,13 @@ class TRANSPORT_HELPER extends BASE_HELPER
     {
         $user = request()->user();
         if (IsUserAnAdmin()) { ##SI LE USER EST UN ADMIN
-            $transports = Transport::with(['owner', 'type', "status"])->orderBy('id', 'desc')->get();
+            $transports = Transport::with(['owner', 'type', "status", "frets"])->orderBy('id', 'desc')->get();
             return self::sendResponse($transports, "Moyen de transports récupérés avec succès");
         }
-
         ### S'il est un simple user
         ### il recupère seulement les transports qui lui appartiennent
 
-        $transports = Transport::with(['owner', 'type', "status"])->where(['owner' => $user->id])->orderBy('id', 'desc')->get();
+        $transports = Transport::with(['owner', 'type', "status", "frets"])->where(['owner' => $user->id])->orderBy('id', 'desc')->get();
         return self::sendResponse($transports, 'Liste des moyens de transport récupérés avec succès!!');
     }
 
@@ -200,6 +200,19 @@ class TRANSPORT_HELPER extends BASE_HELPER
             $formData["img3"] = asset("vehicule_images/" . $img_name);
         }
 
+        ###TRAITEMENT DU STATUS DU TRANSPORT
+        if ($request->get("status")) {
+            $status_ = $request->get('status');
+            $status = TransportStatus::find($status_);
+
+            if (!$status) {
+                return self::sendError("Ce status de transport n'existe pas!", 404);
+            }
+
+            $transport->status = $status_;
+            $transport->save(); ### Changement de status
+        }
+
         $transport->update($formData);
         return self::sendResponse($transport, "Moyen de transport modifié avec succès!!");
     }
@@ -218,7 +231,7 @@ class TRANSPORT_HELPER extends BASE_HELPER
             return self::sendError("Ce moyen de transport ne vous appartient pas! Vous ne pouvez pas le supprimer!", 404);
         }
 
-        $transport->delete(); #SUPPRESSION DU MOYEN DE TRANSPORT;
+        $transport->delete(); ### SUPPRESSION DU MOYEN DE TRANSPORT;
         return self::sendResponse($transport, "Ce moyen de transport a été supprimé avec succès!!");
     }
 }

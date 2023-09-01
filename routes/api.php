@@ -81,6 +81,9 @@ Route::prefix('v1')->group(function () {
             Route::any('/{id}/retrieve', '_Retrieve'); #RECUPERER UN SEUL FRET
             Route::any('/{id}/update', 'Update'); #MODIFIER UN FRET
             Route::any('/{id}/delete', 'Delete'); #SUPPRIMER UN FRET
+
+            ###========== AFFECTATION D'UN FRET A UN TRANSPORT ========###
+            Route::any('/affect_to_transport', 'AffectToTransport'); #SUPPRIMER UN FRET
         });
 
         Route::prefix('types')->group(function () {
@@ -101,6 +104,9 @@ Route::prefix('v1')->group(function () {
                 Route::any('{id}/retrieve', 'RetrieveFretStatus');
             });
         });
+
+
+
     });
 
     Route::prefix('notifications')->group(function () {
