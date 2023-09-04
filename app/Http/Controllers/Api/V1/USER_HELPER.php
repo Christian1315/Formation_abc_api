@@ -17,8 +17,8 @@ class USER_HELPER extends BASE_HELPER
         return [
             'expeditor' => ['required', "boolean"],
             'transporter' => ['required', "boolean"],
-            'firstname' => 'required',
-            'lastname' => 'required',
+            // 'firstname' => 'required',
+            // 'lastname' => 'required',
             'phone' => ['required', "integer", Rule::unique("users")],
             'email' => ['required', 'email', Rule::unique('users')],
             'password' => ['required', Rule::unique('users')],
@@ -33,8 +33,8 @@ class USER_HELPER extends BASE_HELPER
             'expeditor.transporter' => 'Le champ **transporter** est réquis!',
             'expeditor.transporter' => 'Le champ **transporter** doit être un boolean!',
 
-            'firstname.required' => 'Le champ Firstname est réquis!',
-            'lastname.required' => 'Le champ Lastname est réquis!',
+            // 'firstname.required' => 'Le champ Firstname est réquis!',
+            // 'lastname.required' => 'Le champ Lastname est réquis!',
             'phone.required' => 'Le champ Phone est réquis!',
             'phone.integer' => 'Le champ Phone doit être un entier!',
             'phone.unique' => 'Ce Phone existe déjà!',

@@ -21,10 +21,12 @@ class User extends Authenticatable
     protected $fillable = [
         'firstname',
         'lastname',
+        "denomination",
         'phone',
-        'facturation_adresse',
         'email',
         'password',
+        "ifu",
+        "rccm"
     ];
 
     /**
@@ -56,7 +58,7 @@ class User extends Authenticatable
     #ONE TO MANY RELATIONSHIP(UN USER[celui qui a le role **is_transporter**] PEUT AJOUTER PLUISIEURS MOYENS DE TRANSPORT)
     function transports(): HasMany
     {
-        return $this->hasMany(Transport::class,"owner");
+        return $this->hasMany(Transport::class, "owner");
     }
 
     #ONE TO MANY RELATIONSHIP(UN USER[celui qui a le role **is_sender**] PEUT AJOUTER PLUISIEURS FRETS)

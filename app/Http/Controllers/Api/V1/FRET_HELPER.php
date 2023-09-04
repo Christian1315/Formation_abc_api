@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Frets;
 use App\Models\FretStatus;
-use App\Models\FretTransport;
 use App\Models\FretType;
 use App\Models\Transport;
 use App\Models\Type;
@@ -59,6 +58,15 @@ class FRET_HELPER extends BASE_HELPER
     static function createFret($request)
     {
         $formData = $request->all();
+
+        ###TRAITEMENT D'IMAGE
+        if ($request->file("rccm")) {
+            $rccm = $request->file('rccm');
+            $img_name = $rccm->getClientOriginalName();
+            $request->file('img3')->move("vehicule_images", $img_name);
+            $formData["rccm"] = asset("rccm_images/" . $img_name);
+        }
+
 
         ###TRAITEMENT DU MOYEN DE TRANSPORT
         $transport_type = Type::find($formData["transport_type"]);
