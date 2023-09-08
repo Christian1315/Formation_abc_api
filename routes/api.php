@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\V1\Notifications;
 use App\Http\Controllers\Api\V1\TransportStatusController;
 use App\Http\Controllers\Api\V1\FretStatusController;
 use App\Http\Controllers\Api\V1\FretTypeController;
+use App\Http\Controllers\Api\V1\ReservationController;
 use App\Models\FretType;
 use Illuminate\Support\Facades\Route;
 
@@ -86,6 +87,15 @@ Route::prefix('v1')->group(function () {
             Route::any('/affect_to_transport', 'AffectToTransport'); #SUPPRIMER UN FRET
         });
 
+        Route::prefix("reservation")->group(function () {
+            Route::controller(ReservationController::class)->group(function () {
+                Route::any('/add', 'Create');
+                Route::any('all', 'AllReservations');
+                Route::any('/{id}/retrieve', 'Retrieve');
+                Route::any('/{id}/delete', 'Delete');
+            });
+        });
+
         Route::prefix('types')->group(function () {
             Route::controller(FretTypeController::class)->group(function () {
                 Route::any('all', 'FretTypes');
@@ -104,9 +114,6 @@ Route::prefix('v1')->group(function () {
                 Route::any('{id}/retrieve', 'RetrieveFretStatus');
             });
         });
-
-
-
     });
 
     Route::prefix('notifications')->group(function () {

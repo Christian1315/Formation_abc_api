@@ -84,16 +84,14 @@ class FretController extends FRET_HELPER
         return $this->deleteFret($id);
     }
 
-     #AFFECTATION D'UN FRET A UN TRANSPORT
-     public function AffectToTransport(Request $request)
-     {
-         #VERIFICATION DE LA METHOD
-         if ($this->methodValidation($request->method(), "POST") == False) {
-             #RENVOIE D'ERREURE VIA **sendError** DE LA CLASS BASE_HELPER HERITEE PAR FRET_HELPER
-             return $this->sendError("La methode " . $request->method() . " n'est pas supportée pour cette requete!!", 404);
-         };
-         return $this->_affectToTransport($request);
-     }
- }
-
-
+    #AFFECTATION D'UN FRET A UN TRANSPORT
+    public function AffectToTransport(Request $request)
+    {
+        #VERIFICATION DE LA METHOD
+        if ($this->methodValidation($request->method(), "POST") == False) {
+            #RENVOIE D'ERREURE VIA **sendError** DE LA CLASS BASE_HELPER HERITEE PAR FRET_HELPER
+            return $this->sendError("La methode " . $request->method() . " n'est pas supportée pour cette requete!!", 404);
+        };
+        return $this->_affectToTransport($request);
+    }
+}

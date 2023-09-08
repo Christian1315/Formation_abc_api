@@ -16,8 +16,8 @@ class DatabaseSeeder extends Seeder
         $userData = [
             'firstname' => 'Christian',
             'lastname' => 'GOGO',
-            'email' => 'admin@gmail.com',
-            'password' => '$2y$10$CI5P59ICr/HOihqlnYUrLeKwCajgMKd34HB66.JsJBrIOQY9fazrG', #admin
+            'email' => 'gogochristian009@gmail.com',
+            'password' => '$2y$10$8JhR1nysW.mE1hI7CqkArelFuSLglJaBxJK5w1yLaNSpedc.4q.fq', #gogo@1315
             'phone' => "22961765590",
             'compte_actif' => true,
         ];
