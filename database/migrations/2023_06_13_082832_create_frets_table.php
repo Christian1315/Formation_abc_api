@@ -20,15 +20,6 @@ return new class extends Migration
             $table->string('depart_map')->nullable();
             $table->string('arrived_map')->nullable();
 
-            ###MARCHANDISES
-            $table->foreignId('fret_type')
-                ->nullable()
-                ->constrained('types', "id")
-                ->onUpdate('CASCADE')
-                ->onDelete('CASCADE');
-            $table->integer('weight');
-            $table->integer('length');
-
             ###VEHICULE
             $table->integer('transport_num');
             $table->foreignId('transport_type')

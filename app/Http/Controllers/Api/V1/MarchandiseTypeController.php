@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
 
-class FretTypeController extends FRET_TYPE_HELPER
+class MarchandiseTypeController extends Marchandise_TYPE_HELPER
 {
     #VERIFIONS SI LE USER EST AUTHENTIFIE
     public function __construct()
@@ -17,19 +17,18 @@ class FretTypeController extends FRET_TYPE_HELPER
         ]);
     }
 
-    #RECUPERATION DE TOUT LES TYPES DE MOYENS DE Fret
-    public function FretTypes(Request $request)
+    #RECUPERATION DE TOUT LES TYPES  DE Marchandise
+    public function _MarchandiseTypes(Request $request)
     {
         #VERIFICATION DE LA METHOD
         if ($this->methodValidation($request->method(), "GET") == False) {
             #RENVOIE D'ERREURE VIA **sendError** DE LA CLASS BASE_HELPER HERITEE PAR USER_HELPER
             return $this->sendError("La methode " . $request->method() . " n'est pas supportée pour cette requete!!", 404);
         };
-
-        return $this->types(); #RETOURNE TOUT LES TYPES MOYENS DE FretS
+        return $this->marchandiseTypes(); #RETOURNE TOUT LES TYPES MOYENS DE MarchandiseS
     }
 
-    #RECUPERATION D'UN TYPE DE MOYENS DE Fret
+    #RECUPERATION D'UN TYPE  DE Marchandise
     public function Retrieve(Request $request, $id)
     {
         #VERIFICATION DE LA METHOD
@@ -38,30 +37,30 @@ class FretTypeController extends FRET_TYPE_HELPER
             return $this->sendError("La methode " . $request->method() . " n'est pas supportée pour cette requete!!", 404);
         };
 
-        return $this->_retrieveFretType($id);
+        return $this->_retrieveMarchandiseType($id);
     }
 
-    #CREATION D'UN MOYENS DE Fret
+    #CREATION D'UN MOYENS DE Marchandise
     public function Create(Request $request)
     {
         #VERIFICATION DE LA METHOD
         if ($this->methodValidation($request->method(), "POST") == False) {
-            #RENVOIE D'ERREURE VIA **sendError** DE LA CLASS BASE_HELPER HERITEE PAR Fret_TYPE_HELPER
+            #RENVOIE D'ERREURE VIA **sendError** DE LA CLASS BASE_HELPER HERITEE PAR Marchandise_TYPE_HELPER
             return $this->sendError("La methode " . $request->method() . " n'est pas supportée pour cette requete!!", 404);
         };
-        #VALIDATION DES DATAs DEPUIS LA CLASS Fret_TYPE_HELPER
-        $validator = $this->FretType_Validator($request->all());
+        #VALIDATION DES DATAs DEPUIS LA CLASS Marchandise_TYPE_HELPER
+        $validator = $this->MarchandiseType_Validator($request->all());
 
         if ($validator->fails()) {
-            #RENVOIE D'ERREURE VIA **sendResponse** DE LA CLASS BASE_HELPER HERITEE PAR Fret_TYPE_HELPER
+            #RENVOIE D'ERREURE VIA **sendResponse** DE LA CLASS BASE_HELPER HERITEE PAR Marchandise_TYPE_HELPER
             return $this->sendError($validator->errors(), 404);
         }
 
-        #ENREGISTREMENT DANS LA DB VIA **createFret** DE LA CLASS BASE_HELPER HERITEE PAR Fret_TYPE_HELPER
-        return $this->createFretType($request);
+        #ENREGISTREMENT DANS LA DB VIA **createMarchandise** DE LA CLASS BASE_HELPER HERITEE PAR Marchandise_TYPE_HELPER
+        return $this->createMarchandiseType($request);
     }
 
-    #MODIFICATION D'UN TYPE DE MOYENS DE Fret
+    #MODIFICATION D'UN TYPE  DE Marchandise
     public function Update(Request $request, $id)
     {
 
@@ -71,10 +70,10 @@ class FretTypeController extends FRET_TYPE_HELPER
             return $this->sendError("La methode " . $request->method() . " n'est pas supportée pour cette requete!!", 404);
         };
 
-        return $this->updateFretype($request, $id);
+        return $this->updateMarchandiseype($request, $id);
     }
 
-    #SUPPRESSION D'UN TYPE DE MOYENS DE Fret
+    #SUPPRESSION D'UN TYPE  DE Marchandise
     public function Delete(Request $request, $id)
     {
         #VERIFICATION DE LA METHOD
@@ -83,10 +82,10 @@ class FretTypeController extends FRET_TYPE_HELPER
             return $this->sendError("La methode " . $request->method() . " n'est pas supportée pour cette requete!!", 404);
         };
 
-        return $this->deleteFretType($id);
+        return $this->deleteMarchandiseType($id);
     }
 
-    #RECHERCHE D'UN TYPE MOYENS DE Fret
+    #RECHERCHE D'UN TYPE MOYENS DE Marchandise
     public function Search(Request $request)
     {
         #VERIFICATION DE LA METHOD
@@ -95,6 +94,6 @@ class FretTypeController extends FRET_TYPE_HELPER
             return $this->sendError("La methode " . $request->method() . " n'est pas supportée pour cette requete!!", 404);
         };
 
-        return $this->searchFretType($request);
+        return $this->searchMarchandiseType($request);
     }
 }

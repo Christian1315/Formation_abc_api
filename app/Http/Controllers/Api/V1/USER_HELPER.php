@@ -17,8 +17,6 @@ class USER_HELPER extends BASE_HELPER
         return [
             'expeditor' => ['required', "boolean"],
             'transporter' => ['required', "boolean"],
-            // 'firstname' => 'required',
-            // 'lastname' => 'required',
             'phone' => ['required', "integer", Rule::unique("users")],
             'email' => ['required', 'email', Rule::unique('users')],
             'password' => ['required', Rule::unique('users')],

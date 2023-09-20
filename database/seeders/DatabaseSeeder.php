@@ -115,9 +115,9 @@ class DatabaseSeeder extends Seeder
         }
 
 
-        #=========== CREER DES TYPES DE FRET PAR DEFAUT ============#
+        #=========== CREER DES TYPES DE MARCHANDISE PAR DEFAUT ============#
 
-        $fret_types = [
+        $marchandise_types = [
             [
                 "name" => "Alimentaire",
                 "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
@@ -136,8 +136,8 @@ class DatabaseSeeder extends Seeder
             ],
         ];
 
-        foreach ($fret_types as $fret_type) {
-            \App\Models\FretType::factory()->create($fret_type);
+        foreach ($marchandise_types as $marchandise_type) {
+            \App\Models\MarchandiseType::factory()->create($marchandise_type);
         }
     }
 }

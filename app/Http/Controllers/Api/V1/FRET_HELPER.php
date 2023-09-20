@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\V1;
 use App\Models\Frets;
 use App\Models\FretStatus;
 use App\Models\FretType;
+use App\Models\Marchandise;
+use App\Models\MarchandiseType;
 use App\Models\Transport;
 use App\Models\Type;
 use Illuminate\Support\Facades\Validator;
@@ -17,9 +19,9 @@ class FRET_HELPER extends BASE_HELPER
         return [
             'depart_date' => 'required|date',
             'arrived_date' => 'required|date',
-            'fret_type' => 'required',
-            'weight' => 'required|integer',
-            'length' => 'required|integer',
+            'marchandises' => 'required',
+            // 'weight' => 'required|integer',
+            // 'length' => 'required|integer',
             'transport_type' => 'required|integer',
             'transport_num' => 'required|integer',
             'price' => 'required|integer',
@@ -58,31 +60,53 @@ class FRET_HELPER extends BASE_HELPER
     static function createFret($request)
     {
         $formData = $request->all();
+        // return $formData;
+        $fretData = [
+            "depart_date" => $formData["depart_date"],
+            "arrived_date" => $formData["arrived_date"],
+            "depart_map" => $formData["depart_map"],
+            "arrived_map" => $formData["arrived_map"],
+            "transport_type" => $formData["transport_type"],
+            "transport_num" => $formData["transport_num"],
+            "price" => $formData["price"],
+            "comment" => $formData["comment"],
+        ];
 
-        ###TRAITEMENT D'IMAGE
-        if ($request->file("rccm")) {
-            $rccm = $request->file('rccm');
-            $img_name = $rccm->getClientOriginalName();
-            $request->file('img3')->move("vehicule_images", $img_name);
-            $formData["rccm"] = asset("rccm_images/" . $img_name);
+        $marchandisesData = $formData["marchandises"];
+        // $marchandisesData = [
+        //     [
+        //         "type" => 1,
+        //         "weight" => 3000,
+        //         "length" => 100,
+        //     ],
+        //     [
+        //         "type" => 2,
+        //         "weight" => 5000,
+        //         "length" => 200,
+        //     ]
+        // ];
+
+        ###TRAITEMENT DU TYPE DE MARCHANDISE
+        foreach ($marchandisesData as $marchandise) {
+            $type = MarchandiseType::find($marchandise["type"]);
+            if (!$type) {
+                return self::sendError("Ce type de marchandise d'ID: " . $marchandise["type"] . " n'existe pas!", 505);
+            }
         }
 
-
-        ###TRAITEMENT DU MOYEN DE TRANSPORT
-        $transport_type = Type::find($formData["transport_type"]);
-        if (!$transport_type) {
-            return self::sendError("Ce type de transport n'existe pas", 404);
-        }
-
-        ###TRAITEMENT DU TYPE DE FRET
-        $fret_type = FretType::find($formData["fret_type"]);
-        if (!$fret_type) {
-            return self::sendError("Ce type de Fret n'existe pas", 404);
-        }
-        $fret = Frets::create($formData);
+        #####CREATION DU FRET
+        $fret = Frets::create($fretData);
         $fret->owner = request()->user()->id;
         $fret->status = 1;
         $fret->save();
+
+        #####CREATION DE LA MARCHANDISE
+        foreach ($marchandisesData as $marchandise) {
+            $mar = Marchandise::create($marchandise);
+            $mar->fret = $fret->id;
+            $mar->save();
+        }
+
         return self::sendResponse($fret, 'Fret ajouté avec succès!!');
     }
 
@@ -90,7 +114,7 @@ class FRET_HELPER extends BASE_HELPER
     {
         $user = request()->user();
         if (IsUserAnAdmin()) { ##SI LE USER EST UN ADMIN
-            $frets = Frets::with(['owner', "status", "transport_type", "fret_type", "transport"])->find($id);
+            $frets = Frets::with(['owner', "status", "transport_type", "marchandise", "transport"])->find($id);
             if (!$frets) {
                 return self::sendError('Ce Fret n\'existe pas!', 404);
             };
@@ -98,7 +122,7 @@ class FRET_HELPER extends BASE_HELPER
         }
 
         ### S'il est un simple user
-        $fret = Frets::with(['owner', "status", "transport_type", "fret_type", "transport"])->where(["owner" => $user->id])->find($id);
+        $fret = Frets::with(['owner', "status", "transport_type", "marchandise", "transport"])->where(["owner" => $user->id])->find($id);
         #QUAND L'ID NE CORRESPOND A AUCUN FRET
         if (!$fret) {
             return self::sendError('Ce Fret n\'existe pas!', 404);
@@ -109,13 +133,14 @@ class FRET_HELPER extends BASE_HELPER
     static function frets()
     {
         $user = request()->user();
+
         if (IsUserAnAdmin()) { ##SI LE USER EST UN ADMIN
-            $frets = Frets::with(['owner', "status", "transport_type", "fret_type", "transport"])->orderBy("id", "desc")->get();
+            $frets = Frets::with(['owner', "status", "transport_type", "marchandise", "transport"])->orderBy("id", "desc")->get();
             return self::sendResponse($frets, "Liste des Frets récupéré avec succès");
         }
 
         #QUAND C'EST UN SIMPLE USER
-        $frets = Frets::with(['owner', "status", "transport_type", "transport"])->where(['owner' => $user->id])->orderBy('id', 'desc')->get();
+        $frets = Frets::with(['owner', "status", "transport_type", "transport", "marchandise"])->where(['owner' => $user->id])->orderBy('id', 'desc')->get();
 
         return self::sendResponse($frets, 'Liste des frets récupérés avec succès!!');
     }
@@ -140,13 +165,13 @@ class FRET_HELPER extends BASE_HELPER
             }
         }
 
-        if ($request->get("fret_type")) {
-            ###TRAITEMENT DU TYPE DE FRET
-            $fret_type = FretType::find($formData["fret_type"]);
-            if (!$fret_type) {
+        if ($request->get("type")) {
+            ###TRAITEMENT DU TYPE DE MARCHANDISE
+            $type = MarchandiseType::find($formData["type"]);
+            if (!$type) {
                 return self::sendError("Ce type de Fret n'existe pas", 404);
             }
-            $fret->fret_type = $formData["fret_type"];
+            $fret->type = $formData["type"];
         }
 
         if ($request->get("status")) {

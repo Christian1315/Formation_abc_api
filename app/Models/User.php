@@ -64,7 +64,7 @@ class User extends Authenticatable
     #ONE TO MANY RELATIONSHIP(UN USER[celui qui a le role **is_sender**] PEUT AJOUTER PLUISIEURS FRETS)
     function frets(): HasMany
     {
-        return $this->hasMany(Frets::class);
+        return $this->hasMany(Frets::class,"owner");
     }
 
 

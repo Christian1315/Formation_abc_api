@@ -4,9 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class FretType extends Model
+class MarchandiseType extends Model
 {
     use HasFactory;
 
@@ -15,8 +16,10 @@ class FretType extends Model
         'image'
     ];
 
-    function frets(): HasMany
+    protected $table = "marchandises_type";
+
+    function marchandises(): HasMany
     {
-        return $this->hasMany(Frets::class, "fret_types");
+        return $this->hasMany(Marchandise::class, "type");
     }
 }

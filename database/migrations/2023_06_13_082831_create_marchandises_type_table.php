@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('fret_types', function (Blueprint $table) {
+        Schema::create('marchandises_type', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('image');
