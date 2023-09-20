@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
 
-class MarchandiseTypeController extends Marchandise_TYPE_HELPER
+class MarchandiseTypeController extends MARCHANDISE_TYPE_HELPER
 {
     #VERIFIONS SI LE USER EST AUTHENTIFIE
     public function __construct()
