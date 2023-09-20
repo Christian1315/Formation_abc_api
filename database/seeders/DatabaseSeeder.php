@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -26,27 +28,33 @@ class DatabaseSeeder extends Seeder
 
         ##======== CREATION DES ROLES PAR DEFAUT ============####
 
-        \App\Models\Role::factory()->create([
-            'label' => 'is_transporter'
-        ]);
+        $roles = [
+            [
+                'label' => 'is_transporter'
+            ],
+            [
+                'label' => 'is_sender'
+            ],
+            [
+                'label' => 'is_admin'
+            ],
+            [
+                'label' => 'is_supervisor'
+            ],
+            [
+                'label' => 'is_shipper'
+            ],
+            [
+                'label' => 'is_biller'
+            ]
+        ];
 
-        \App\Models\Role::factory()->create([
-            'label' => 'is_sender'
-        ]);
-        $role_admin = \App\Models\Role::factory()->create([
-            'label' => 'is_admin'
-        ]);
-        \App\Models\Role::factory()->create([
-            'label' => 'is_supervisor'
-        ]);
-        \App\Models\Role::factory()->create([
-            'label' => 'is_shipper'
-        ]);
-        \App\Models\Role::factory()->create([
-            'label' => 'is_biller'
-        ]);
+        foreach ($roles as $role) {
+            \App\Models\Role::factory()->create($role);
+        };
 
         ###========= AFFECTATION DU ROLE **is_admin** AU USER ADMIN =========### 
+        $role_admin = User::find(1);
         $user->roles()->attach($role_admin);
 
 
@@ -54,15 +62,98 @@ class DatabaseSeeder extends Seeder
 
         $transportTypes = [
             [
-                "name" => "Camion",
+                "name" => "P11 (Porteur avec 1 essieu devant et 1 essieu arrière)",
                 "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
             ],
             [
-                "name" => "Car",
+                "name" => "P12 (Porteur avec 1 essieu devant et 2 essieux derrière)",
                 "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
             ],
             [
-                "name" => "Train",
+                "name" => "T11S2	(Tracteur avec 1 essieu devant, 1 essieu derrière et semi-remorque avec 2 essieux)",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "T11S3	(Tracteur avec 1 essieu devant, 1 essieu derrière et semi-remorque avec 3 essieux)",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+
+            [
+                "name" => "T11S3	(Tracteur avec 1 essieu devant, 1 essieu derrière et semi-remorque avec 3 essieux)",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "T12S2	(Tracteur avec 1 essieu devant, 2 essieux derrière et semi-remorque avec 2 essieux)",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "T12S3	(Tracteur avec 1 essieu devant, 2 essieux derrière et semi-remorque avec 3 essieux)",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "T12S4	(Tracteur avec 1 essieu devant, 2 essieux derrière et semi-remorque avec 4 essieux)",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+
+
+            [
+                "name" => "12 places",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "15 places",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "20 places",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "25 places",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "30 places",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "40 places",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "50 places",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "60 places",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "70 places",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "Fourchon",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "Plateau",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "Citerne",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "Benne",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "Bus",
+                "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
+            ],
+            [
+                "name" => "70 places",
                 "image" => "https://res.cloudinary.com/duk6hzmju/image/upload/v1693321022/logo_vpxoml.png"
             ],
         ];
