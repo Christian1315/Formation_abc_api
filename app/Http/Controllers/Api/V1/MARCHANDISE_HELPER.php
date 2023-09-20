@@ -5,10 +5,8 @@ namespace App\Http\Controllers\Api\V1;
 use App\Models\Frets;
 use App\Models\Marchandise;
 use App\Models\MarchandiseType;
-use App\Models\Type;
 use Illuminate\Support\Facades\Validator;
 
-use Illuminate\Support\Str;
 
 class MARCHANDISE_HELPER extends BASE_HELPER
 {
