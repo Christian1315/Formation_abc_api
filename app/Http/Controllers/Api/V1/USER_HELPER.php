@@ -211,7 +211,6 @@ class USER_HELPER extends BASE_HELPER
 
     static function getUsers()
     {
-
         $users =  User::with(['transports', 'roles', 'frets', 'notifications'])->get();
         return self::sendResponse($users, 'Touts les utilisatreurs récupérés avec succès!!');
     }

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Models\FretType;
 use App\Models\MarchandiseType;
 use App\Models\Type;
 use Illuminate\Support\Facades\Validator;
@@ -50,7 +49,6 @@ class MARCHANDISE_TYPE_HELPER extends BASE_HELPER
 
     static function marchandiseTypes()
     {
-        // return "ggo";
         #RECUPERATION DE TOUT LES TYPES DE Marchandise
         $types = MarchandiseType::with(['marchandises'])->orderBy('id', 'desc')->get();
         return self::sendResponse($types, 'Liste des types de Marchandise récupérés avec succès!!');

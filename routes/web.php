@@ -1,7 +1,9 @@
 <?php
 
-use App\Http\Controllers\Api\V1\Notifications;
 use App\Http\Controllers\Api\V1\PdfController;
+use App\Models\User;
+use App\Notifications\SendNotification;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Route;
 
 
@@ -23,10 +25,18 @@ Route::get('/', function () {
 Route::get('/documentation', function () {
     return view('documentation');
 });
-Route::get("user/{id?}",function($id=null){
-    return 'User '.$id;
+Route::get("user/{id?}", function ($id = null) {
+    return 'User ' . $id;
 });
 
-Route::get('pdf',[PdfController::class,'getPdf']);
+Route::get('pdf', [PdfController::class, 'getPdf']);
 
-Route::get('send-mail',[Notifications::class,'testMail']);
+Route::get('send-notification', function () {
+    $data = [
+        "subject" => "Test Laravel notification",
+        "message" => "Salut Christ!! Comment vas-tu!!?",
+    ];
+
+    $user = User::find(1);
+    Notification::send($user, new SendNotification($data));
+});

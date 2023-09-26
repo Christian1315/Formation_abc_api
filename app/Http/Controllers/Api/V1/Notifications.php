@@ -101,8 +101,4 @@ class Notifications extends NOTIFICATIONS_HELPER
 
         return $this->deleteNotification($NOTIFICATION);
     }
-
-    function testMail(Request $request) {
-        return $this->sendEmail('contact@fedrelay.com','gogochristain009@gmail.com');
-    }
 }
