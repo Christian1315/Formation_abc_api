@@ -15,7 +15,7 @@ class CheckIfUserIsAdminOrExpeditor
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!IsUserAnAdminOrExpeditor()) {
+        if (!IsUserAnAdminOrExpeditor(request()->user()->id)) {
             return response()->json([
                 "status" => false,
                 "message" => "Seuls les admins et les Expéditeurs sont autorisés à éffectuer cette opération",

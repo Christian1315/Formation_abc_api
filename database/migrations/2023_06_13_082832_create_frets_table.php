@@ -56,6 +56,7 @@ return new class extends Migration
                 ->onUpdate('CASCADE')
                 ->onDelete('CASCADE');
 
+            $table->boolean("factured")->default(false);
             $table->boolean("affected")->default(false);
             $table->timestamps();
         });

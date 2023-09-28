@@ -65,14 +65,13 @@ class TRANSPORT_HELPER extends BASE_HELPER
     static function retrieveTransport($id)
     {
         $user = request()->user();
-        if (IsUserAnAdmin()) { ##SI LE USER EST UN ADMIN
+        if (IsUserAnAdmin($user->id)) { ##SI LE USER EST UN ADMIN
             $transport = Transport::with(['owner', 'type', "status", "frets"])->find($id);
             if (!$transport) {
                 return self::sendError('Ce moyen de transport n\'existe pas!', 404);
             };
             return self::sendResponse($transport, "Moyen de transport récupéré avec succès");
         }
-
         ### S'il est un simple user
         $transport = Transport::with(['owner', 'type', "status", "frets"])->where(['owner' => $user->id, "id" => $id])->find($id);
         if (!$transport) {
@@ -128,7 +127,7 @@ class TRANSPORT_HELPER extends BASE_HELPER
     static function transports()
     {
         $user = request()->user();
-        if (IsUserAnAdmin()) { ##SI LE USER EST UN ADMIN
+        if (IsUserAnAdmin($user->id)) { ##SI LE USER EST UN ADMIN
             $transports = Transport::with(['owner', 'type', "status", "frets"])->orderBy('id', 'desc')->get();
             return self::sendResponse($transports, "Moyen de transports récupérés avec succès");
         }
@@ -202,6 +201,9 @@ class TRANSPORT_HELPER extends BASE_HELPER
 
         ###TRAITEMENT DU STATUS DU TRANSPORT
         if ($request->get("status")) {
+            if (!IsUserAnAdmin($user->id)) {
+                return self::sendError("Désolé! Seuls les admins peuvent valider un transport", 201);
+            }
             $status_ = $request->get('status');
             $status = TransportStatus::find($status_);
 

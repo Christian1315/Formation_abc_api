@@ -108,8 +108,9 @@ class USER_HELPER extends BASE_HELPER
         return $validator;
     }
 
-    static function createUser($formData)
+    static function createUser($request)
     {
+        $formData = $request->all();
         $expeditor = $formData["expeditor"];
         $transporter = $formData["transporter"];
 
@@ -126,11 +127,25 @@ class USER_HELPER extends BASE_HELPER
             $role = Role::find(1); ###ROLE D'UN TRANSPORTEUR(is_transporter)
         };
 
+        ##GESTION DES IMAGES
+        if ($request->file("ifu")) {
+            $ifu = $request->file('ifu');
+            $img_name = $ifu->getClientOriginalName();
+            $request->file('ifu')->move("ifu", $img_name);
+            $formData["ifu"] = asset("ifu/" . $img_name);
+        }
+
+        if ($request->file("rccm")) {
+            $rccm = $request->file('rccm');
+            $img_name = $rccm->getClientOriginalName();
+            $request->file('rccm')->move("rccm", $img_name);
+            $formData["rccm"] = asset("rccm/" . $img_name);
+        }
+
         $user = User::create($formData); #ENREGISTREMENT DU USER DANS LA DB
 
         #AFFECTATION DU ROLE **$role** AU USER **$user** 
         $user->roles()->attach($role);
-
 
         $active_compte_code = Get_compte_active_Code($user, "ACT");
         $user->active_compte_code = $active_compte_code;

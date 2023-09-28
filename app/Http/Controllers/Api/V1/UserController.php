@@ -39,7 +39,7 @@ class UserController extends USER_HELPER
         }
 
         #ENREGISTREMENT DANS LA DB VIA **createUser** DE LA CLASS BASE_HELPER HERITEE PAR USER_HELPER
-        return $this->createUser($request->all());
+        return $this->createUser($request);
     }
 
     #MODIFIER UN PASSWORD

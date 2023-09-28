@@ -60,7 +60,6 @@ class FRET_HELPER extends BASE_HELPER
     static function createFret($request)
     {
         $formData = $request->all();
-        // return $formData;
         $fretData = [
             "depart_date" => $formData["depart_date"],
             "arrived_date" => $formData["arrived_date"],
@@ -113,7 +112,7 @@ class FRET_HELPER extends BASE_HELPER
     static function retrieve($id)
     {
         $user = request()->user();
-        if (IsUserAnAdmin()) { ##SI LE USER EST UN ADMIN
+        if (IsUserAnAdmin($user->id)) { ##SI LE USER EST UN ADMIN
             $frets = Frets::with(['owner', "status", "transport_type", "marchandise", "transport"])->find($id);
             if (!$frets) {
                 return self::sendError('Ce Fret n\'existe pas!', 404);
@@ -134,7 +133,7 @@ class FRET_HELPER extends BASE_HELPER
     {
         $user = request()->user();
 
-        if (IsUserAnAdmin()) { ##SI LE USER EST UN ADMIN
+        if (IsUserAnAdmin($user->id)) { ##SI LE USER EST UN ADMIN
             $frets = Frets::with(['owner', "status", "transport_type", "marchandise", "transport"])->orderBy("id", "desc")->get();
             return self::sendResponse($frets, "Liste des Frets récupéré avec succès");
         }
@@ -180,6 +179,13 @@ class FRET_HELPER extends BASE_HELPER
             if (!$status) {
                 return self::sendError("Ce status de Fret n'existe pas", 404);
             }
+
+            ##s'il vaut mettre le status du fret sur **Livré**
+            if ($formData["status"] == 5) {
+                if (!$fret->affected) { ##si le fret n'est pas encore affecté, on ne peut pas le mettre sur le status *Livré*
+                    return self::sendError("Désolé! Ce fret n'a été affecté à aucun transporteur. Vous ne pouvez donc pas le noter comme un fret livré!", 505);
+                }
+            }
             $fret->status = $formData["status"];
         }
         $fret->save();
@@ -215,6 +221,11 @@ class FRET_HELPER extends BASE_HELPER
         $fret = Frets::find($formData["fret_id"]);
         $transport = Transport::find($formData["transport_id"]);
 
+        ###___VERIFIONS SI CE FRET LUI APPARTIENT
+        if ($fret->owner != $user->id) {
+            return self::sendError("Ce fret ne vous appartient pas!", 505);
+        }
+
         ##________ TRAITEMENT DU MOYEN DE TRANSPORT _______
 
         #*** VERIFIONS SI CE TRANSPORT EXISTE
@@ -226,17 +237,10 @@ class FRET_HELPER extends BASE_HELPER
         if ($transport->status != 2) {
             return self::sendError("Ce transport n'est pas encore validé! Veuillez le faire valider!", 505);
         }
-        return $transport->status;
 
         ###VERIFIONS SI CE FRET EXISTE
         if (!$fret) {
             return self::sendError("Ce Fret n'existe pas", 505);
-        }
-
-        ###VERIFIONS SI CE FRET APPARTIENT AU USER
-        $fret_ = Frets::where(["owner" => $user->id, "id" => $formData["fret_id"]])->get();
-        if ($fret_->count() == 0) {
-            return self::sendError("Désolé! Ce Fret ne vous appartient pas!", 505);
         }
 
         ###VERIFIONS SI CE FRET A DEJA ETE AFFECTE A UN QUELCONQUE TRANSPORT

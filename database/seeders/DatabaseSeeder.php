@@ -199,6 +199,10 @@ class DatabaseSeeder extends Seeder
                 "name" => "Publié",
                 "description" => "Ce Fret est validé",
             ],
+            [
+                "name" => "Livré",
+                "description" => "Ce Fret a été livré",
+            ],
         ];
 
         foreach ($fret_status as $fret_statu) {

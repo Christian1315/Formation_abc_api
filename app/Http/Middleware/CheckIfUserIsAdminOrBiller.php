@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckIfUserIsAdminOrTransporter
+class CheckIfUserIsAdminOrBiller
 {
     /**
      * Handle an incoming request.
@@ -15,10 +15,10 @@ class CheckIfUserIsAdminOrTransporter
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!IsUserAnAdminOrTransporter(request()->user()->id)) {
+        if (!IsUserAnAdminOrBiller(request()->user()->id)) {
             return response()->json([
                 "status" => false,
-                "message" => "Seuls les admins et les transporteurs sont autorisés à éffectruer cette opération",
+                "message" => "Seuls les admins et les facturiers sont autorisés à éffectuer cette opération",
             ]);
         }
         return $next($request);

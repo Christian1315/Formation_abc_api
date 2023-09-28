@@ -15,10 +15,10 @@ class CheckIfUserIsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!IsUserAnAdmin()) {
+        if (!IsUserAnAdmin(request()->user()->id)) {
             return response()->json([
                 "status" => false,
-                "message" => "Seuls les admins sont autorisés à éffectruer cette opération",
+                "message" => "Seuls les admins sont autorisés à éffectuer cette opération",
             ]);
         }
         return $next($request);

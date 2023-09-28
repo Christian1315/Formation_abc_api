@@ -1,6 +1,7 @@
 <?php
 
 use App\Mail\SendEmail;
+use App\Models\Frets;
 use Illuminate\Support\Facades\Notification;
 use App\Models\User;
 use App\Notifications\SendNotification;
@@ -64,23 +65,28 @@ function Send_Notification($receiver, $subject, $message)
     Notification::send($receiver, new SendNotification($data));
 }
 
-function IsUserAnAdmin()
+function IsUserAnAdmin($userId)
 {
-    $user = request()->user();
+    $user = User::find($userId);
     $roles = $user->roles;
     // return $roles;
     foreach ($roles as $role) {
         if ($role->label == "is_admin") { #S'IL EST UN ADMIN
             return true;
         }
-
         return false; #S'IL N'EST PAS UN ADMIN
     }
 }
 
-function IsUserAnAdminOrTransporter()
+####___CE HELPER PERMET D'OBTENIR LA COMMISION SUR CHAQUE TRANSACTION POUR AGBANDE
+function TRANSACTION_COMMISSION($fret_price)
 {
-    $user = request()->user();
+    return ($fret_price * 5) / 100;
+}
+
+function IsUserAnAdminOrTransporter($userId)
+{
+    $user = User::find($userId);
     $roles = $user->roles;
     foreach ($roles as $role) {
         if ($role->label == "is_transporter") { #S'IL EST UN TRANSPORTEUR
@@ -94,9 +100,9 @@ function IsUserAnAdminOrTransporter()
     }
 }
 
-function IsUserAnAdminOrExpeditor()
+function IsUserAnAdminOrExpeditor($userId)
 {
-    $user = request()->user();
+    $user = User::find($userId);
     $roles = $user->roles;
     foreach ($roles as $role) {
         if ($role->label == "is_sender") { #S'IL EST UN EXPEDITEUR
@@ -107,5 +113,21 @@ function IsUserAnAdminOrExpeditor()
             return true;
         }
         return false; #S'IL N'EST NI EXPEDITEUR NI ADMIN
+    }
+}
+
+function IsUserAnAdminOrBiller($userId)
+{
+    $user = User::find($userId);
+    $roles = $user->roles;
+    foreach ($roles as $role) {
+        if ($role->label == "is_biller") { #S'IL EST UN FACTURIER
+            return true;
+        }
+
+        if ($role->label == "is_admin") { #S'IL EST UN ADMIN
+            return true;
+        }
+        return false; #S'IL N'EST NI FACTURIER NI ADMIN
     }
 }

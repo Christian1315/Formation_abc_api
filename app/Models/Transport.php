@@ -50,6 +50,6 @@ class Transport extends Model
 
     function frets(): HasMany
     {
-        return $this->hasMany(Frets::class, "transport_id")->with(["owner","status","fret_type"]);
+        return $this->hasMany(Frets::class, "transport_id")->with(["owner","status"]);
     }
 }

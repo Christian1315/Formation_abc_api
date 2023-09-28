@@ -39,7 +39,6 @@ class ReservationController extends FRET_RESERVATION_HELPER
             #RENVOIE D'ERREURE VIA **sendError** DE LA CLASS BASE_HELPER HERITEE PAR RESERVATION_HELPER
             return $this->sendError("La methode " . $request->method() . " n'est pas supportée pour cette requete!!", 404);
         };
-
         return $this->retrieveReservation($id);
     }
 

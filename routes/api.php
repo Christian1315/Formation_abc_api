@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\TransportController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\Authorization;
+use App\Http\Controllers\Api\V1\FactureController;
 use App\Http\Controllers\Api\V1\FretController;
 use App\Http\Controllers\Api\V1\TransportType;
 use App\Http\Controllers\Api\V1\Notifications;
@@ -136,6 +137,16 @@ Route::prefix('v1')->group(function () {
             Route::any('/{id}/retreive', 'NotificationsReceived'); #RECUPERER TOUTES LES NOTIFICATION RECU POUR UN USER VIA SON **RECEIVER_ID**
             Route::any('/{id}/update', 'Update'); #MODIFIER UNE NOTIFICATION
             Route::any('/{id}/delete', 'Delete'); #SUPPRESSION D'UNE NOTIFICATION
+        });
+    });
+
+    Route::prefix('facture')->group(function () {
+        Route::controller(FactureController::class)->group(function () {
+            Route::any('all', '_Factures'); #RECUPERER TOUTES LES FACTURES
+            Route::any('{id}/create', 'Create'); #CREER UNE FACTURES
+            Route::any('/{id}/retrieve', '_Retrieve'); #RECUPERER TOUTES LES FACTURE
+            Route::any('/{id}/update', 'Update'); #MODIFIER UNE FACTURE
+            Route::any('/{id}/delete', 'Delete'); #SUPPRESSION D'UNE FACTURE
         });
     });
 });
