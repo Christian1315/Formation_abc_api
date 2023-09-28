@@ -5,17 +5,17 @@
 /public/storage
 /storage/*.key
 /vendor
-/vendor/public/assurance_card
-/vendor/public/factures/expeditors
-/vendor/public/factures/transporteurs
-/vendor/public/fretTypeImages
-/vendor/public/gris_card
-/vendor/public/ifu
-/vendor/public/MarchandiseTypeImages
-/vendor/public/rccm
-/vendor/public/tech_visit
-/vendor/public/transportTypeImages
-/vendor/public/vehicule_images
+/public/assurance_card
+/public/factures/expeditors
+/public/factures/transporteurs
+/public/fretTypeImages
+/public/gris_card
+/public/ifu
+/public/MarchandiseTypeImages
+/public/rccm
+/public/tech_visit
+/public/transportTypeImages
+/public/vehicule_images
 
 
 
