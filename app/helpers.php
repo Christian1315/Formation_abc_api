@@ -116,6 +116,7 @@ function IsUserAnAdminOrExpeditor($userId)
     }
 }
 
+
 function IsUserAnAdminOrBiller($userId)
 {
     $user = User::find($userId);
