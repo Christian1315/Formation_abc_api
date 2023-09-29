@@ -26,13 +26,11 @@ class USER_HELPER extends BASE_HELPER
     static function register_messages(): array
     {
         return [
-            'expeditor.required' => 'Le champ **expeditor** est réquis!',
-            'expeditor.boolean' => 'Le champ **expeditor** doit être un boolean!',
-            'expeditor.transporter' => 'Le champ **transporter** est réquis!',
-            'expeditor.transporter' => 'Le champ **transporter** doit être un boolean!',
+            'expeditor.required' => 'Le champ expeditor est réquis!',
+            'expeditor.boolean' => 'Le champ expeditor doit être un boolean!',
+            'transporter.required' => 'Le champ transporter est réquis!',
+            'transporter.boolean' => 'Le champ transporter doit être un boolean!',
 
-            // 'firstname.required' => 'Le champ Firstname est réquis!',
-            // 'lastname.required' => 'Le champ Lastname est réquis!',
             'phone.required' => 'Le champ Phone est réquis!',
             'phone.integer' => 'Le champ Phone doit être un entier!',
             'phone.unique' => 'Ce Phone existe déjà!',
@@ -49,6 +47,43 @@ class USER_HELPER extends BASE_HELPER
         #
         $rules = self::register_rules();
         $messages = self::register_messages();
+
+        $validator = Validator::make($formDatas, $rules, $messages);
+        return $validator;
+    }
+
+    ##======== ADDING A USER =======##
+    static function add_user_rules(): array
+    {
+        return [
+            'role' => ['required', "integer"],
+            'phone' => ['required', "integer", Rule::unique("users")],
+            'email' => ['required', 'email', Rule::unique('users')],
+            'password' => ['required', Rule::unique('users')],
+        ];
+    }
+
+    static function add_user_messages(): array
+    {
+        return [
+            'role.required' => 'Le champ role est réquis!',
+            'role.integer' => 'Le champ role doit être un entier!',
+
+            'phone.required' => 'Le champ Phone est réquis!',
+            'phone.integer' => 'Le champ Phone doit être un entier!',
+            'phone.unique' => 'Ce Phone existe déjà!',
+            'email.required' => 'Le champ Email est réquis!',
+            'email.email' => 'Ce champ est un mail!',
+            'email.unique' => 'Ce mail existe déjà!',
+            'password.required' => 'Le champ Password est réquis!',
+            'password.unique' => 'Ce mot de passe existe déjà!!',
+        ];
+    }
+
+    static function Add_user_Validator($formDatas)
+    {
+        $rules = self::add_user_rules();
+        $messages = self::add_user_messages();
 
         $validator = Validator::make($formDatas, $rules, $messages);
         return $validator;
@@ -170,6 +205,63 @@ class USER_HELPER extends BASE_HELPER
         );
 
         return self::sendResponse($user, 'Compte crée avec succès!!');
+    }
+
+    static function addUser($request)
+    {
+        $formData = $request->all();
+        $role = Role::find($formData["role"]);
+        if (!$role) {
+            return self::sendError("Ce role n'existe pas", 404);
+        }
+
+        ##GESTION DES IMAGES
+        if ($request->file("ifu")) {
+            $ifu = $request->file('ifu');
+            $img_name = $ifu->getClientOriginalName();
+            $request->file('ifu')->move("ifu", $img_name);
+            $formData["ifu"] = asset("ifu/" . $img_name);
+        }
+
+        if ($request->file("rccm")) {
+            $rccm = $request->file('rccm');
+            $img_name = $rccm->getClientOriginalName();
+            $request->file('rccm')->move("rccm", $img_name);
+            $formData["rccm"] = asset("rccm/" . $img_name);
+        }
+
+        $user = User::create($formData); #ENREGISTREMENT DU USER DANS LA DB
+
+        #AFFECTATION DU ROLE **$role** AU USER **$user** 
+        $user->roles()->attach($role);
+
+        $active_compte_code = Get_compte_active_Code($user, "ACT");
+        $user->active_compte_code = $active_compte_code;
+        $user->compte_actif = 0;
+        $user->save();
+
+        ###____
+        $current_user = request()->user();
+
+        $adder = $current_user->company_name ? $current_user->company_name : $current_user->firstname . " " . $current_user->lastname;
+        #=====ENVOIE D'EMAIL =======~####
+        $message = $adder . " viens de vous créer un compte sur AGBANDE";
+        $compte_activation_msg = "Le compte n'est pas encore actif. Veuillez l'activer en utilisant le code ci-dessous : " . $active_compte_code;
+
+
+        Send_Email(
+            $user->email,
+            "Création de compte sur AGBANDE",
+            $message,
+        );
+
+        Send_Email(
+            $user->email,
+            "Activation de compte sur AGBANDE",
+            $compte_activation_msg,
+        );
+
+        return self::sendResponse($user, 'Utilisateur ajouté avec succès!!');
     }
 
     static function userAuthentification($request)

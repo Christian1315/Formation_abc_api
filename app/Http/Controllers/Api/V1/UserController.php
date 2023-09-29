@@ -42,6 +42,27 @@ class UserController extends USER_HELPER
         return $this->createUser($request);
     }
 
+    #AJOUT D'UN USER
+    function _AddUser(Request $request)
+    {
+        #VERIFICATION DE LA METHOD
+        if ($this->methodValidation($request->method(), "POST") == False) {
+            #RENVOIE D'ERREURE VIA **sendError** DE LA CLASS BASE_HELPER HERITEE PAR USER_HELPER
+            return $this->sendError("La methode " . $request->method() . " n'est pas supportée pour cette requete!!", 404);
+        };
+
+        #VALIDATION DES DATAs DEPUIS LA CLASS BASE_HELPER HERITEE PAR USER_HELPER
+        $validator = $this->Add_user_Validator($request->all());
+
+        if ($validator->fails()) {
+            #RENVOIE D'ERREURE VIA **sendError** DE LA CLASS BASE_HELPER HERITEE PAR USER_HELPER
+            return $this->sendError($validator->errors(), 404);
+        }
+
+        #ENREGISTREMENT DANS LA DB VIA **addUser** DE LA CLASS BASE_HELPER HERITEE PAR USER_HELPER
+        return $this->addUser($request);
+    }
+
     #MODIFIER UN PASSWORD
     function UpdatePassword(Request $request)
     {

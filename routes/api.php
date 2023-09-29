@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\V1\FretStatusController;
 use App\Http\Controllers\Api\V1\MarchandiseTypeController;
 use App\Http\Controllers\Api\V1\ReservationController;
 use App\Http\Controllers\Api\V1\MarchandiseController;
+use App\Http\Controllers\Api\V1\RoleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,6 +31,7 @@ Route::prefix('v1')->group(function () {
     ###========== USERs ROUTINGS ========###
     Route::controller(UserController::class)->group(function () {
         Route::any('register', 'Register');
+        Route::any('add', '_AddUser');
         Route::any('login', 'Login');
         Route::middleware(['auth:api'])->get('logout', 'Logout');
         Route::any('users', 'Users');
@@ -38,6 +40,15 @@ Route::prefix('v1')->group(function () {
         Route::any('password/demand_reinitialize', 'DemandReinitializePassword');
         Route::any('password/reinitialize', 'ReinitializePassword');
         Route::any('users/{id}', 'RetrieveUser');
+    });
+
+    Route::prefix('roles')->group(function () {
+        Route::controller(RoleController::class)->group(function () {
+            Route::any('all', 'Roles');
+            Route::any('{id}/retrieve', 'Retrieve');
+            Route::any('/attach-to-user', 'AttachRoleToUser');
+            Route::any('/retrieve-from-user', 'RetrieveRoleFromUser');
+        });
     });
 
     Route::any('authorization', [Authorization::class, 'Authorization'])->name('authorization');
