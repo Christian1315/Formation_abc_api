@@ -93,7 +93,7 @@ class USER_HELPER extends BASE_HELPER
     static function login_rules(): array
     {
         return [
-            'account' => 'required',
+            'phone' => 'required|numeric',
             'password' => 'required',
         ];
     }
@@ -101,7 +101,8 @@ class USER_HELPER extends BASE_HELPER
     static function login_messages(): array
     {
         return [
-            'account.required' => 'Le champ Account est réquis!',
+            'phone.required' => 'Le phone est réquis!',
+            'phone.numeric' => 'Le phone doit être numérique!',
             'password.required' => 'Le champ Password est réquis!',
         ];
     }
@@ -267,25 +268,11 @@ class USER_HELPER extends BASE_HELPER
     static function userAuthentification($request)
     {
 
-        if (is_numeric($request->get('account'))) {
-            $credentials  =  ['phone' => $request->get('account'), 'password' => $request->get('password')];
-        } elseif (filter_var($request->get('account'), FILTER_VALIDATE_EMAIL)) {
-            $credentials  =  ['email' => $request->get('account'), 'password' => $request->get('password')];
-        }
-
-        if (Auth::attempt($credentials)) { #SI LE USER EST AUTHENTIFIE
+        if (Auth::attempt(['phone' => $request->get('phone'), 'password' => $request->get('password')])) { #SI LE USER EST AUTHENTIFIE
             $user = Auth::user();
 
-            ###VERIFIONS SI LE COMPTE EST ACTIF
-            if (!$user->compte_actif) {
-                return self::sendError("Ce compte n'est pas actif! Veuillez l'activer", 404);
-            }
-
             $token = $user->createToken('MyToken', ['api-access'])->accessToken;
-            $user['roles'] = $user->roles;
-            $user['notifications'] = $user->notifications;
-            $user['token'] = $token;
-
+            $user["token"] = $token;
             #RENVOIE D'ERREURE VIA **sendResponse** DE LA CLASS BASE_HELPER
             return self::sendResponse($user, 'Vous etes connecté(e) avec succès!!');
         }
@@ -294,32 +281,10 @@ class USER_HELPER extends BASE_HELPER
         return self::sendError('Connexion échouée! Vérifiez vos données puis réessayez à nouveau!', 500);
     }
 
-    static function activateAccount($request)
-    {
-        if (!$request->get("active_compte_code")) {
-            return self::sendError("Le Champ **active_compte_code** est réquis", 505);
-        }
-        $user =  User::where(["active_compte_code" => $request->active_compte_code])->get();
-        if ($user->count() == 0) {
-            return self::sendError("Ce Code ne corresponds à aucun compte! Veuillez saisir le vrai code", 505);
-        }
-
-        $user = $user[0];
-        ###VERIFIONS SI LE COMPTE EST ACTIF DEJA
-
-        if ($user->compte_actif) {
-            return self::sendError("Ce compte est déjà actif!", 505);
-        }
-
-        $user->compte_actif = 1;
-        $user->save();
-        return self::sendResponse($user, 'Votre compte à été activé avec succès!!');
-    }
-
     static function getUsers()
     {
-        $users =  User::with(['transports', 'roles', 'frets', 'notifications'])->get();
-        return self::sendResponse($users, 'Touts les utilisatreurs récupérés avec succès!!');
+        $users =  User::orderBy("id","desc")->get();
+        return self::sendResponse($users, 'Tout les utilisatreurs récupérés avec succès!!');
     }
 
     static function _updatePassword($formData)
@@ -427,7 +392,7 @@ class USER_HELPER extends BASE_HELPER
 
     static function retrieveUsers($id)
     {
-        $user = User::with(['transports', 'roles', 'frets', 'notifications'])->where('id', $id)->get();
+        $user = User::find($id);
         if ($user->count() == 0) {
             return self::sendError("Ce utilisateur n'existe pas!", 404);
         }

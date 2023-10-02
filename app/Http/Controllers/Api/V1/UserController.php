@@ -12,12 +12,6 @@ class UserController extends USER_HELPER
         $this->middleware(['auth:api', 'scope:api-access'])->except([
             "Register",
             "Login",
-            "AccountActivation",
-            "DemandReinitializePassword",
-            "ReinitializePassword",
-        ]);
-        $this->middleware("CheckIfUserIsAdmin")->only([
-            "Users",
         ]);
     }
 
@@ -83,32 +77,6 @@ class UserController extends USER_HELPER
         return $this->_updatePassword($request->all());
     }
 
-    #DEMANDE DE REINITIALISATION D'UN PASSWORD
-    function DemandReinitializePassword(Request $request)
-    {
-        #VERIFICATION DE LA METHOD
-        if ($this->methodValidation($request->method(), "POST") == False) {
-            #RENVOIE D'ERREURE VIA **sendError** DE LA CLASS BASE_HELPER HERITEE PAR USER_HELPER
-            return $this->sendError("La methode " . $request->method() . " n'est pas supportée pour cette requete!!", 404);
-        };
-
-        #RECUPERATION D'UN USER VIA SON **id**
-        return $this->_demandReinitializePassword($request);
-    }
-
-    #REINITIALISER UN PASSWORD
-    function ReinitializePassword(Request $request)
-    {
-        #VERIFICATION DE LA METHOD
-        if ($this->methodValidation($request->method(), "POST") == False) {
-            #RENVOIE D'ERREURE VIA **sendError** DE LA CLASS BASE_HELPER HERITEE PAR USER_HELPER
-            return $this->sendError("La methode " . $request->method() . " n'est pas supportée pour cette requete!!", 404);
-        };
-
-        #RECUPERATION D'UN USER VIA SON **id**
-        return $this->_reinitializePassword($request);
-    }
-
     #GET ALL USERS
     function Users(Request $request)
     {
@@ -154,18 +122,6 @@ class UserController extends USER_HELPER
 
         #AUTHENTIFICATION DU USER
         return $this->userAuthentification($request);
-    }
-
-    #ACTIVATE AN ACCOUNT
-    function AccountActivation(Request $request)
-    {
-        #VERIFICATION DE LA METHOD
-        if ($this->methodValidation($request->method(), "POST") == False) {
-            #RENVOIE D'ERREURE VIA **sendError** DE LA CLASS BASE_HELPER HERITEE PAR USER_HELPER
-            return $this->sendError("La methode " . $request->method() . " n'est pas supportée pour cette requete!!", 404);
-        };
-
-        return $this->activateAccount($request);
     }
 
     function Logout(Request $request)
