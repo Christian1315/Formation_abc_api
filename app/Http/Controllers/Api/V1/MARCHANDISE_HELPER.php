@@ -38,20 +38,18 @@ class MARCHANDISE_HELPER extends BASE_HELPER
 
     function _retrieveMarchandise($id)
     {
-        $marchandise = Marchandise::find($id);
-
+        $marchandise = Marchandise::with(['fret', "type"])->find($id);
         if (!$marchandise) {
             return self::sendError('Cette Marchandise n\'existe pas!', 404);
         };
-
-        return self::sendResponse($marchandise, "TMarchandise récupérée avec succès!");
+        return self::sendResponse($marchandise, "Marchandise récupérée avec succès!");
     }
 
     static function marchandises()
     {
         #RECUPERATION DE TOUT LES TYPES DE Marchandise
-        $types = Marchandise::with(['fret'])->orderBy('id', 'desc')->get();
-        return self::sendResponse($types, 'Liste des types de Marchandise récupérés avec succès!!');
+        $types = Marchandise::with(['fret', "type"])->orderBy('id', 'desc')->get();
+        return self::sendResponse($types, 'Liste des Marchandise récupérés avec succès!!');
     }
 
     static function deleteMarchandise($id)
@@ -77,7 +75,7 @@ class MARCHANDISE_HELPER extends BASE_HELPER
         ###GESTION DU FRET DE MARCHANDISE SI ELLE EXISTAIT
         if ($request->get('type')) {
             if (!is_numeric($request->get('type'))) {
-                return self::sendError("Le type est un entier",505);
+                return self::sendError("Le type est un entier", 505);
             }
             $type = MarchandiseType::find($request->get('type'));
             if (!$type) {
@@ -88,7 +86,7 @@ class MARCHANDISE_HELPER extends BASE_HELPER
         ###GESTION DU TYPE DE MARCHANDISE SI ELLE EXISTAIT
         if ($request->get('fret')) {
             if (!is_numeric($request->get('fret'))) {
-                return self::sendError("Le fret est un entier",505);
+                return self::sendError("Le fret est un entier", 505);
             }
             $fret = Frets::find($request->get('fret'));
             if (!$fret) {

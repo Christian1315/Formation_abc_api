@@ -20,4 +20,8 @@ class Marchandise extends Model
     function fret():BelongsTo {
         return $this->belongsTo(Frets::class,"fret");
     }
+
+    function type():BelongsTo {
+        return $this->belongsTo(MarchandiseType::class,"type");
+    }
 }

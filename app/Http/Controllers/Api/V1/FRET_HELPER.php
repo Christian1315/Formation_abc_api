@@ -111,17 +111,17 @@ class FRET_HELPER extends BASE_HELPER
 
     static function retrieve($id)
     {
-        $user = request()->user();
-        if (IsUserAnAdmin($user->id)) { ##SI LE USER EST UN ADMIN
-            $frets = Frets::with(['owner', "status", "transport_type", "marchandise", "transport"])->find($id);
-            if (!$frets) {
-                return self::sendError('Ce Fret n\'existe pas!', 404);
-            };
-            return self::sendResponse($frets, "Fret récupéré avec succès");
-        }
+        // $user = request()->user();
+        // if (IsUserAnAdmin($user->id)) { ##SI LE USER EST UN ADMIN
+        //     $frets = Frets::with(['owner', "status", "transport_type", "marchandises", "transport"])->find($id);
+        //     if (!$frets) {
+        //         return self::sendError('Ce Fret n\'existe pas!', 404);
+        //     };
+        //     return self::sendResponse($frets, "Fret récupéré avec succès");
+        // }
 
         ### S'il est un simple user
-        $fret = Frets::with(['owner', "status", "transport_type", "marchandise", "transport"])->where(["owner" => $user->id])->find($id);
+        $fret = Frets::with(['owner', "status", "transport_type", "marchandises", "transport"])->find($id);
         #QUAND L'ID NE CORRESPOND A AUCUN FRET
         if (!$fret) {
             return self::sendError('Ce Fret n\'existe pas!', 404);
@@ -131,15 +131,15 @@ class FRET_HELPER extends BASE_HELPER
 
     static function frets()
     {
-        $user = request()->user();
+        // $user = request()->user();
 
-        if (IsUserAnAdmin($user->id)) { ##SI LE USER EST UN ADMIN
-            $frets = Frets::with(['owner', "status", "transport_type", "marchandise", "transport"])->orderBy("id", "desc")->get();
-            return self::sendResponse($frets, "Liste des Frets récupéré avec succès");
-        }
+        // if (IsUserAnAdmin($user->id)) { ##SI LE USER EST UN ADMIN
+        //     $frets = Frets::with(['owner', "status", "transport_type", "marchandises", "transport"])->orderBy("id", "desc")->get();
+        //     return self::sendResponse($frets, "Liste des Frets récupéré avec succès");
+        // }
 
         #QUAND C'EST UN SIMPLE USER
-        $frets = Frets::with(['owner', "status", "transport_type", "transport", "marchandise"])->where(['owner' => $user->id])->orderBy('id', 'desc')->get();
+        $frets = Frets::with(['owner', "status", "transport_type", "transport", "marchandises"])->orderBy('id', 'desc')->get();
 
         return self::sendResponse($frets, 'Liste des frets récupérés avec succès!!');
     }
@@ -147,9 +147,9 @@ class FRET_HELPER extends BASE_HELPER
     static function updateFret($request, $id)
     {
         $formData = $request->all();
-        $user = request()->user();
+        // $user = request()->user();
 
-        $fret = Frets::where(["owner" => $user->id, "id" => $id])->get();
+        $fret = Frets::where(["id" => $id])->get();
         if ($fret->count() == 0) {
             return self::sendError('Ce Fret n\'existe pas!', 404);
         };

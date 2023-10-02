@@ -56,8 +56,8 @@ class Frets extends Model
         return $this->belongsTo(Transport::class, "transport_id")->with("owner");
     }
 
-    function marchandise(): HasMany
+    function marchandises(): HasMany
     {
-        return $this->hasMany(Marchandise::class, "fret");
+        return $this->hasMany(Marchandise::class, "fret")->with("type");
     }
 }

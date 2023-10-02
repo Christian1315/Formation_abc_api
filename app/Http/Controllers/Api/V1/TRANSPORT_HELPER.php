@@ -64,16 +64,16 @@ class TRANSPORT_HELPER extends BASE_HELPER
 
     static function retrieveTransport($id)
     {
-        $user = request()->user();
-        if (IsUserAnAdmin($user->id)) { ##SI LE USER EST UN ADMIN
-            $transport = Transport::with(['owner', 'type', "status", "frets"])->find($id);
-            if (!$transport) {
-                return self::sendError('Ce moyen de transport n\'existe pas!', 404);
-            };
-            return self::sendResponse($transport, "Moyen de transport récupéré avec succès");
-        }
+        // $user = request()->user();
+        // if (IsUserAnAdmin($user->id)) { ##SI LE USER EST UN ADMIN
+        //     $transport = Transport::with(['owner', 'type', "status", "frets"])->find($id);
+        //     if (!$transport) {
+        //         return self::sendError('Ce moyen de transport n\'existe pas!', 404);
+        //     };
+        //     return self::sendResponse($transport, "Moyen de transport récupéré avec succès");
+        // }
         ### S'il est un simple user
-        $transport = Transport::with(['owner', 'type', "status", "frets"])->where(['owner' => $user->id, "id" => $id])->find($id);
+        $transport = Transport::with(['owner', 'type', "status", "frets"])->where(["id" => $id])->find($id);
         if (!$transport) {
             return self::sendError('Ce moyen de transport n\'existe pas!', 404);
         };
@@ -126,15 +126,15 @@ class TRANSPORT_HELPER extends BASE_HELPER
 
     static function transports()
     {
-        $user = request()->user();
-        if (IsUserAnAdmin($user->id)) { ##SI LE USER EST UN ADMIN
-            $transports = Transport::with(['owner', 'type', "status", "frets"])->orderBy('id', 'desc')->get();
-            return self::sendResponse($transports, "Moyen de transports récupérés avec succès");
-        }
-        ### S'il est un simple user
-        ### il recupère seulement les transports qui lui appartiennent
+        // $user = request()->user();
+        // if (IsUserAnAdmin($user->id)) { ##SI LE USER EST UN ADMIN
+        //     $transports = Transport::with(['owner', 'type', "status", "frets"])->orderBy('id', 'desc')->get();
+        //     return self::sendResponse($transports, "Moyen de transports récupérés avec succès");
+        // }
+        // ### S'il est un simple user
+        // ### il recupère seulement les transports qui lui appartiennent
 
-        $transports = Transport::with(['owner', 'type', "status", "frets"])->where(['owner' => $user->id])->orderBy('id', 'desc')->get();
+        $transports = Transport::with(['owner', 'type', "status", "frets"])->orderBy('id', 'desc')->get();
         return self::sendResponse($transports, 'Liste des moyens de transport récupérés avec succès!!');
     }
 
@@ -148,10 +148,10 @@ class TRANSPORT_HELPER extends BASE_HELPER
             return self::sendError("Ce moyen de transport n'existe pas", 404);
         }
 
-        $transport_ = Transport::where(["owner" => $user->id, "id" => $id])->get();
-        if ($transport_->count() == 0) {
-            return self::sendError("Ce moyen de transport ne vous appartient pas! Vous ne pouvez pas le modifier!", 404);
-        }
+        // $transport_ = Transport::where(["owner" => $user->id, "id" => $id])->get();
+        // if ($transport_->count() == 0) {
+        //     return self::sendError("Ce moyen de transport ne vous appartient pas! Vous ne pouvez pas le modifier!", 404);
+        // }
 
         ##GESTION DES IMAGES
         if ($request->file('gris_card')) {
