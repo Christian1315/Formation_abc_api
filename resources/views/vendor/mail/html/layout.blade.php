@@ -38,6 +38,13 @@
                     <tr>
                         <td class="body" width="100%" cellpadding="0" cellspacing="0" style="border: hidden !important;">
                             <table class="inner-body" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
+                                <tr style="background-color: #0e813e;">
+                                    <td class="header">
+                                        <a href="" style="display: inline-block;background-color:#fff;padding:10px;border-radius:5px">
+                                            <img src="https://res.cloudinary.com/duk6hzmju/image/upload/v1696615347/logo_f7qlvp.png" class="logo" alt="FORMATION ABC">
+                                        </a>
+                                    </td>
+                                </tr>
                                 <!-- Body content -->
                                 <tr>
                                     <td class="content-cell">

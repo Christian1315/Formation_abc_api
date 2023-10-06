@@ -1,7 +1,6 @@
 <?php
 
 use App\Mail\SendEmail;
-use App\Models\Frets;
 use Illuminate\Support\Facades\Notification;
 use App\Models\User;
 use App\Notifications\SendNotification;

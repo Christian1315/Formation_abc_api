@@ -39,4 +39,5 @@ Route::get('send-notification', function () {
 
     $user = User::find(1);
     Notification::send($user, new SendNotification($data));
+    dd("Notification envoyée avec succès!!");
 });

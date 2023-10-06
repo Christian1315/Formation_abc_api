@@ -12,7 +12,7 @@
 <table border="0" cellpadding="0" cellspacing="0" role="presentation">
 <tr>
 <td>
-<a href={{env("APP_URL")}} class="button btn" style="background-color: #9F9A0F;padding:10px" target="_blank" rel="noopener">{{ $slot }}</a>
+<a href={{env("APP_URL")}} class="button btn" style="background-color: #0e813e;padding:10px" target="_blank" rel="noopener">{{ $slot }}</a>
 </td>
 </tr>
 </table>
