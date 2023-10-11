@@ -1,18 +1,8 @@
 <?php
 
-use App\Http\Controllers\Api\V1\TransportController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\Authorization;
-use App\Http\Controllers\Api\V1\FactureController;
-use App\Http\Controllers\Api\V1\FretController;
-use App\Http\Controllers\Api\V1\TransportType;
-use App\Http\Controllers\Api\V1\Notifications;
-use App\Http\Controllers\Api\V1\TransportStatusController;
-use App\Http\Controllers\Api\V1\FretStatusController;
-use App\Http\Controllers\Api\V1\MarchandiseTypeController;
-use App\Http\Controllers\Api\V1\ReservationController;
-use App\Http\Controllers\Api\V1\MarchandiseController;
-use App\Http\Controllers\Api\V1\RoleController;
+use App\Http\Controllers\Api\V1\ContactController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,6 +29,15 @@ Route::prefix('v1')->group(function () {
             Route::any('password/update', 'UpdatePassword');
         });
     });
-
     Route::any('authorization', [Authorization::class, 'Authorization'])->name('authorization');
+
+    ###========== CONTACT ROUTINGS ========###
+    Route::controller(ContactController::class)->group(function () {
+        Route::prefix('contact')->group(function () {
+            Route::any('add', 'ContactCreate'); #AJOUT DE CONTACT
+            Route::any('all', 'Contacts'); #GET ALL CONTACTS
+            Route::any('{id}/retrieve', 'ContactRetrieve'); #RECUPERATION D'UN CONTACT
+            Route::any('{id}/delete', 'DeleteContact'); #SUPPRESSION DE CONTACT
+        });
+    });
 });

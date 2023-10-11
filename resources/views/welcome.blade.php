@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>AGBANDE</title>
+    <title>FORMATION ABC</title>
     <link rel="shortcut icon" href="logo.png" type="image/x-icon">
     <link rel="stylesheet" href="bootstrap.css">
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous"> -->
@@ -22,7 +22,7 @@
             <div class="col-md-12">
                 <nav class="navbar navbar-expand-lg">
                     <div class="container-fluid">
-                        <a class="navbar-brand text-white bg-dark px-3" href="/"> <strong>AGBANDE</strong></a>
+                        <a class="navbar-brand text-white px-3" href="/" style="background-color: #0e813e;"> <strong>FORMATION ABC</strong></a>
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
@@ -32,11 +32,11 @@
                                     <a href="#" class="nav-link active" aria-current="page" href="#">Site Officiel</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/documentation">Api Documentation</a>
+                                    <a class="nav-link" href="">Api Documentation</a>
                                 </li>
                             </ul>
                             <form class="d-flex" role="search">
-                                <img src="logo.png" class="shadow-lg p-3 bg-body rounded" alt="" srcset="">
+                                <img src="logo.png" width="100px" class="shadow-lg p-3 bg-body rounded" alt="" srcset="">
                             </form>
                         </div>
                     </div>
@@ -46,13 +46,10 @@
     </div>
     <div class="container content">
         <div class="row">
-            <div class="col-md-6">
-                <img src="bg-img.png" class="img-fluid img" alt="" srcset="">
-            </div>
-            <div class="col-md-6 text-center">
-                <h1 class="title">Soyez les bienvenus sur l'API du Projet AGBANDE</h1>
+            <div class="col-md-612 text-center">
+                <h1 class="title">Soyez les bienvenus sur l'API du Projet FORMATION ABC</h1>
                 <p class="text-dark">Pour commencer,veuillez jetter un oeil sur la documentation pour avoir une vision plus claire de l'implementation des différentes routes!</p>
-                <a href="/documentation" class="btn documentation">Voir la documentation</a>
+                <a href="" class="btn documentation">Voir la documentation</a>
             </div>
         </div>
     </div>
@@ -60,7 +57,7 @@
     <div class="container-fluid bg-light shadow-lg py-3 footer fixed-bottom">
         <div class="row">
             <div class="col-md-12">
-                <p class="text-dark text-center">© Copyright 2023 - Développé par HSMC</p>
+                <p class="text-dark text-center">© Copyright 2023 - Développé par <strong style="font-style: italic;">codeForChrist</strong> </p>
             </div>
         </div>
     </div>

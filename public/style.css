@@ -3,17 +3,17 @@ body{
 }
 
 .header{
-    border-bottom:3px solid #9F9A0F;
+    border-bottom:3px solid #0e813e;
 }
 
 .footer{
-    border-top:3px solid #9F9A0F;
+    border-top:3px solid #0e813e;
 }
 
 .img{
     border-radius: 20px 0px 20px 0px;
-    border-top:solid 10px #9F9A0F;
-    border-left:solid 10px #9F9A0F;
+    border-top:solid 10px #0e813e;
+    border-left:solid 10px #0e813e;
     box-shadow: 10px 15px 15px 0px rgba(0,0,0,0.75);;
 }
 
@@ -33,7 +33,7 @@ body{
 }
 
 .btn.documentation{
-    background-color: #9F9A0F;
+    background-color: #0e813e;
     color: #fff;
     font-weight: 500;
     text-transform: uppercase;
@@ -45,7 +45,7 @@ body{
 
 a.return{
     text-decoration: none;
-    color: #9F9A0F;
+    color: #0e813e;
 }
 a.return > strong{
     margin-left: 10px;
