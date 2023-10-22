@@ -6,6 +6,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -136,9 +137,11 @@ class USER_HELPER extends BASE_HELPER
             $user = Auth::user();
 
             $token = $user->createToken('MyToken', ['api-access'])->accessToken;
+            $cookie = Cookie("jwt", $token, 60 * 24);
             $user["token"] = $token;
+
             #RENVOIE D'ERREURE VIA **sendResponse** DE LA CLASS BASE_HELPER
-            return self::sendResponse($user, 'Vous etes connecté(e) avec succès!!');
+            return self::sendResponse($user, 'Vous etes connecté(e) avec succès!!', $cookie);
         }
 
         #RENVOIE D'ERREURE VIA **sendResponse** DE LA CLASS BASE_HELPER
@@ -181,7 +184,9 @@ class USER_HELPER extends BASE_HELPER
 
     static function userLogout($request)
     {
-        $request->user()->token()->revoke();
-        return self::sendResponse([], 'Vous etes déconnecté(e) avec succès!');
+        // $request->user()->token()->revoke();
+
+        $cookie = Cookie::forget("jwt");
+        return self::sendResponse([], 'Vous etes déconnecté(e) avec succès!', $cookie);
     }
 }

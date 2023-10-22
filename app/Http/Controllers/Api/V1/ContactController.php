@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Imports\ContactsImport;
-use App\Models\Contact;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
 
 class ContactController extends CONTACT_HELPER
 {
     #VERIFIONS SI LE USER EST AUTHENTIFIE
     public function __construct()
     {
-        $this->middleware(['auth:api', 'scope:api-access']);
+        $this->middleware(['auth:api', 'scope:api-access'])->except(["ContactCreate"]);
     }
 
     public function ContactCreate(Request $request)
